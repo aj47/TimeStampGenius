@@ -1,0 +1,16 @@
+.dashboard {
+  width: 99vw;
+  height: 80vh;
+  display: flex;
+  padding: 1rem;
+  justify-content: center;
+}
+.dashboard label {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.dashboard button[type="submit"] {
+  margin-top: 1rem;
+  width: 100%;
+}

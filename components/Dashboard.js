@@ -61,10 +61,10 @@ const Dashboard = (props) => {
     setProcessingVideo(false);
   };
   return (
-    <div>
+    <div className="dashboard">
       {processingVideo ? (
         <>
-          <p>processing...</p>
+          {resultingTimestamps.length === 0 && <p>processing...</p>}
           <div>
             {resultingTimestamps.map((line, index) => (
               <p key={index}>{line}</p>
