@@ -1,8 +1,8 @@
-import React from "react"
+import React, { useState } from "react";
 import YouTubeInput from "./YoutubeInput";
 import { useSession, signIn, signOut } from "next-auth/react";
 
-const Dashboard= (props) => {
+const Dashboard = (props) => {
   const [processingVideo, setProcessingVideo] = useState(false);
   const [resultingTimestamps, setResultingTimestamps] = useState([]);
   const onSubmitVideoId = async (id) => {
