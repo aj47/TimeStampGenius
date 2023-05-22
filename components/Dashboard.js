@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import NavBar  from "./NavBar";
 import YouTubeInput from "./YoutubeInput";
 import { useSession, signIn, signOut } from "next-auth/react";
 
@@ -62,6 +63,7 @@ const Dashboard = (props) => {
   };
   return (
     <div className="dashboard">
+      <NavBar/>
       {processingVideo ? (
         <>
           {resultingTimestamps.length === 0 && <p>processing...</p>}

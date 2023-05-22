@@ -4,6 +4,8 @@
   display: flex;
   padding: 1rem;
   justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 .dashboard label {
   display: flex;
@@ -13,4 +15,49 @@
 .dashboard button[type="submit"] {
   margin-top: 1rem;
   width: 100%;
+}
+
+.navbar {
+  width: 100%;
+  padding: 5px 15px;
+  display: flex;
+  border: 1px solid grey;
+  border-radius: 5px;
+  font-size: 0.75rem;
+  margin-bottom: 15px;
+  justify-content: flex-end;
+  align-items: center;
+}
+.navbar button {
+  margin-left: 15px;;
+  font-size: 0.75rem;
+  padding: 2px 5px;
+}
+
+.buy-credit-modal {
+  position:absolute;
+  padding: 15px;
+  right: 25px;
+  top: 49px;
+  border: 1px solid grey;
+  border-radius: 0 0 5px 5px;
+  background-color: rgb(54, 54, 54);
+  min-width: 250px;
+  min-height: 250px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+.buy-credit-modal div {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.buy-credit-modal button {
+  padding: 10px;
+  width: 200px;
+  font-size: 1.05rem;
+  margin: 5px;
 }

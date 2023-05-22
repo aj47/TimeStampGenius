@@ -107,3 +107,7 @@ a {
     color-scheme: dark;
   }
 }
+
+button {
+  cursor: pointer;
+}
