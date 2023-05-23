@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const NavBar = (props) => {
   const [buyCreditsModalOpen, setBuyCreditsModalOpen] = useState(false);
@@ -45,10 +45,25 @@ const NavBar = (props) => {
       </div>
     );
   };
+
+  const updateCredits = async () => {
+    const response = await fetch("/api/getCredits", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((res) => res.json());
+    props.setCredits(response.credits);
+  };
+
+  useEffect(() => {
+    updateCredits();
+  }, []);
+
   return (
     <div className="navbar">
       {buyCreditsModalOpen && <BuyCreditOptions />}
-      <div>Credits: 10</div>
+      <div>Credits: {props.credits}</div>
 
       {buyCreditsModalOpen ? (
         <button

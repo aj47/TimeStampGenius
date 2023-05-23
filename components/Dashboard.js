@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import NavBar  from "./NavBar";
+import NavBar from "./NavBar";
 import YouTubeInput from "./YoutubeInput";
 import { useSession, signIn, signOut } from "next-auth/react";
 
 const Dashboard = (props) => {
   const [processingVideo, setProcessingVideo] = useState(false);
   const [resultingTimestamps, setResultingTimestamps] = useState([]);
+  const [credits, setCredits] = useState(0);
   const onSubmitVideoId = async (id) => {
     setProcessingVideo(true);
     const transcriptionResult = await fetch("/api/getTranscription", {
@@ -63,7 +64,7 @@ const Dashboard = (props) => {
   };
   return (
     <div className="dashboard">
-      <NavBar/>
+      <NavBar credits={credits} setCredits={setCredits} />
       {processingVideo ? (
         <>
           {resultingTimestamps.length === 0 && <p>processing...</p>}
