@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import NavBar from "./NavBar";
 import YouTubeInput from "./YoutubeInput";
-import { useSession, signIn, signOut } from "next-auth/react";
 
 const Dashboard = (props) => {
   const [processingVideo, setProcessingVideo] = useState(false);
@@ -37,6 +36,14 @@ const Dashboard = (props) => {
             currentTextChunk,
           }),
         }).then((res) => res.json());
+        if (completionResult.error) {
+          setProcessingVideo(false);
+          setResultingTimestamps((resultingTimestamps) => [
+            ...resultingTimestamps,
+            "-- Insufficient credits to generate more timestamps --",
+          ]);
+          return;
+        }
         // convert chunkStartTime from ms to hh:mm:ss string
         const completionText = completionResult.completionText;
         const timeStampString = new Date(chunkStartTime)
@@ -49,11 +56,11 @@ const Dashboard = (props) => {
           " - " +
           completionText
         ).replace(/\n/g, " ");
-        console.log(resultingTimestamps, "resultingTimestamps");
         setResultingTimestamps((resultingTimestamps) => [
           ...resultingTimestamps,
           polishedTimeStamp,
         ]);
+        setCredits((oldCredits) => oldCredits - 1);
         console.log(polishedTimeStamp);
         chunkStartTime = 0;
         currentTextChunk = "";
@@ -65,18 +72,17 @@ const Dashboard = (props) => {
   return (
     <div className="dashboard">
       <NavBar credits={credits} setCredits={setCredits} />
-      {processingVideo ? (
-        <>
-          {resultingTimestamps.length === 0 && <p>processing...</p>}
-          <div>
-            {resultingTimestamps.map((line, index) => (
-              <p key={index}>{line}</p>
-            ))}
-          </div>
-        </>
-      ) : (
-        <YouTubeInput onSubmit={onSubmitVideoId} />
-      )}
+      {!processingVideo && <YouTubeInput onSubmit={onSubmitVideoId} />}
+      <>
+        {resultingTimestamps.length === 0 && processingVideo && (
+          <p>processing...</p>
+        )}
+        <div className="timestamps">
+          {resultingTimestamps.map((line, index) => (
+            <div key={index}>{line}</div>
+          ))}
+        </div>
+      </>
     </div>
   );
 };

@@ -29,5 +29,5 @@ export default async function handler(
       ReturnValues: "UPDATED_NEW",
     })
   );
-  res.redirect(307, "/purchaseSuccessScreen");
+  res.redirect(307, "/");
 }

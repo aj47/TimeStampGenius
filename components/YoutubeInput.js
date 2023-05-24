@@ -14,7 +14,7 @@ function YouTubeInput(props) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} style={{marginBottom: 30}}>
       <label>
         YouTube Video ID:
         <input type="text" value={videoId} onChange={handleInputChange} />

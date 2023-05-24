@@ -31,7 +31,7 @@ export default async function handler(req, res) {
       },
     })
   );
-  if (Item.credit <= 0) {
+  if (parseInt(Item.credit.N) <= 0) {
     res.status(200).json({ error: "Insufficient credit" });
     return;
   }
