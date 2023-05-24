@@ -26,16 +26,29 @@ const Dashboard = (props) => {
       currentTextChunk = currentTextChunk + " " + currentLine.text;
       // if the current text chunk exceeds 3500 words print the chunk and reset chunk to blank
       if (currentTextChunk.split(" ").length > 500) {
-        // console.log(currentTextChunk);
-        const completionResult = await fetch("/api/generateTimestamp", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            currentTextChunk,
-          }),
-        }).then((res) => res.json());
+        let completionResult = null;
+        if (props.freeTrial) {
+          completionResult = await fetch("/api/generateFreeTimestamp", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              user: props.freeTrial,
+              currentTextChunk,
+            }),
+          }).then((res) => res.json());
+        } else {
+          completionResult = await fetch("/api/generateTimestamp", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              currentTextChunk,
+            }),
+          }).then((res) => res.json());
+        }
         if (completionResult.error) {
           setProcessingVideo(false);
           setResultingTimestamps((resultingTimestamps) => [
@@ -71,7 +84,11 @@ const Dashboard = (props) => {
   };
   return (
     <div className="dashboard">
-      <NavBar credits={credits} setCredits={setCredits} />
+      <NavBar
+        credits={credits}
+        setCredits={setCredits}
+        freeTrial={props.freeTrial}
+      />
       {!processingVideo && <YouTubeInput onSubmit={onSubmitVideoId} />}
       <>
         {resultingTimestamps.length === 0 && processingVideo && (

@@ -47,12 +47,25 @@ const NavBar = (props) => {
   };
 
   const updateCredits = async () => {
-    const response = await fetch("/api/getCredits", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }).then((res) => res.json());
+    let response = null;
+    if (props.freeTrial) {
+      response = await fetch("/api/getFreeCredits", {
+        method: "POST",
+        body: JSON.stringify({
+          user: props.freeTrial,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }).then((res) => res.json());
+    } else {
+      response = await fetch("/api/getCredits", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }).then((res) => res.json());
+    }
     props.setCredits(response.credits);
   };
 
@@ -64,23 +77,26 @@ const NavBar = (props) => {
     <div className="navbar">
       {buyCreditsModalOpen && <BuyCreditOptions />}
       <div>Credits: {props.credits}</div>
-
-      {buyCreditsModalOpen ? (
-        <button
-          onClick={() => {
-            setBuyCreditsModalOpen(false);
-          }}
-        >
-          X
-        </button>
-      ) : (
-        <button
-          onClick={() => {
-            setBuyCreditsModalOpen(true);
-          }}
-        >
-          Buy Credits
-        </button>
+      {!props.freeTrial && (
+        <>
+          {buyCreditsModalOpen ? (
+            <button
+              onClick={() => {
+                setBuyCreditsModalOpen(false);
+              }}
+            >
+              X
+            </button>
+          ) : (
+            <button
+              onClick={() => {
+                setBuyCreditsModalOpen(true);
+              }}
+            >
+              Buy Credits
+            </button>
+          )}
+        </>
       )}
     </div>
   );
