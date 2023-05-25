@@ -81,6 +81,9 @@ const Dashboard = (props) => {
             }),
           }).then((res) => res.json());
         }
+        if (!completionResult.error && !completionResult.completionText) {
+          onSubmitVideoId(url);
+        }
         if (completionResult.error) {
           setProcessingVideo(false);
           setResultingTimestamps((resultingTimestamps) => [
