@@ -1,19 +1,32 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import NavBar from "./NavBar";
 import YouTubeInput from "./YoutubeInput";
 
 const Dashboard = (props) => {
   const [processingVideo, setProcessingVideo] = useState(false);
   const [resultingTimestamps, setResultingTimestamps] = useState([]);
+  const [copySuccess, setCopySuccess] = useState(false);
   const [credits, setCredits] = useState(0);
+  const timestampDivRef = useRef(null);
+
+  const copyToClipboard = () => {
+    const textToCopy = timestampDivRef.current.innerText;
+    navigator.clipboard.writeText(textToCopy).then(() => {
+      setCopySuccess(true);
+      setTimeout(() => {
+        setCopySuccess(false);
+      }, 1000);
+    });
+  };
 
   const extractVideoId = (url) => {
     // Regular expression pattern to match YouTube video URLs with any domain name and formats
-    var pattern = /(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|.*\.)?youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|v\/|shorts\/)?([^&?/]+)/i;
-  
+    var pattern =
+      /(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|.*\.)?youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|v\/|shorts\/)?([^&?/]+)/i;
+
     // Extract the video ID using the pattern
     var match = url.match(pattern);
-  
+
     if (match && match[1]) {
       // Return the extracted video ID
       return match[1];
@@ -21,7 +34,7 @@ const Dashboard = (props) => {
       // Return null if the URL is not a valid YouTube video URL
       return null;
     }
-  }
+  };
 
   const onSubmitVideoId = async (url) => {
     setProcessingVideo(true);
@@ -110,11 +123,14 @@ const Dashboard = (props) => {
         {resultingTimestamps.length === 0 && processingVideo && (
           <p>processing...</p>
         )}
-        <div className="timestamps">
+        <div className="timestamps" ref={timestampDivRef}>
           {resultingTimestamps.map((line, index) => (
             <div key={index}>{line}</div>
           ))}
         </div>
+        {resultingTimestamps.length > 0 && (
+          <button onClick={copyToClipboard}>Copy Text</button>
+        )}
       </>
     </div>
   );
