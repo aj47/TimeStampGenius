@@ -39,6 +39,7 @@ const Dashboard = (props) => {
   const onSubmitVideoId = async (url) => {
     setProcessingVideo(true);
     const videoId = extractVideoId(url);
+    let hasTranscript = true;
     const transcriptionResult = await fetch("/api/getTranscription", {
       method: "POST",
       headers: {
@@ -47,7 +48,15 @@ const Dashboard = (props) => {
       body: JSON.stringify({
         id: videoId,
       }),
-    }).then((res) => res.json());
+    }).then((res) => res.json()).catch((e) => {
+      hasTranscript = false;
+      console.log(e, "e");
+    });
+    if (!hasTranscript) {
+      setResultingTimestamps(["ERROR: - Selected Youtube video has transcripts disabled"]);
+      setProcessingVideo(false);
+      return;
+    }
     setResultingTimestamps(["00:00:00 - Intro"]);
     // Loop through transcript
     let currentTextChunk = "";
