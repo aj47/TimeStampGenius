@@ -14,17 +14,21 @@ function YouTubeInput(props) {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ marginBottom: 30 }}>
+    <form
+      onSubmit={handleSubmit}
+      style={{ marginBottom: 30, textAlign: "center", width: 350 }}
+    >
       <label>
         YouTube Video URL:
         <input
+          style={{padding: 5, textAlign: "center"}}
           type="text"
           value={videoId}
           onChange={handleInputChange}
           placeholder="https://www.youtube.com/watch?v=xzZVni4OcfE"
         />
       </label>
-      <button type="submit">Submit</button>
+      <button type="submit" style={{padding: 5}}>Submit</button>
     </form>
   );
 }

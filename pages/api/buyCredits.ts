@@ -3,7 +3,11 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "./auth/[...nextauth]";
 const Stripe = require("stripe");
-const stripe = Stripe(process.env.STRIPE_TEST_SECRET);
+const stripe = Stripe(
+  process.env.NODE_ENV === "development"
+    ? process.env.STRIPE_TEST_SECRET
+    : process.env.STRIPE_SECRET
+);
 
 const storeItems = new Map([
   [1, { priceInCents: 500, name: "50 credits", credits: 50 }],

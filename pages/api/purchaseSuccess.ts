@@ -1,7 +1,11 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 const Stripe = require("stripe");
-const stripe = Stripe(process.env.STRIPE_TEST_SECRET);
+const stripe = Stripe(
+  process.env.NODE_ENV === "development"
+    ? process.env.STRIPE_TEST_SECRET
+    : process.env.STRIPE_SECRET
+);
 import { DynamoDBClient, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
 const client = new DynamoDBClient({});
 

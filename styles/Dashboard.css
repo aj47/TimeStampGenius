@@ -1,6 +1,5 @@
 .dashboard {
   width: 99vw;
-  height: 80vh;
   display: flex;
   padding: 1rem;
   align-items: center;
@@ -59,4 +58,12 @@
   width: 200px;
   font-size: 1.05rem;
   margin: 5px;
+}
+
+.timestamps {
+  max-height: 50vh;  
+  overflow: scroll;
+  border: 1px solid grey;
+  padding: 5px;
+  border-radius: 5px;
 }
