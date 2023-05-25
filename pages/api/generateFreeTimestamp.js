@@ -13,6 +13,10 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 export default async function handler(req, res) {
+  if (req.body.user.indexOf("@") !== -1) {
+    res.status(200).json({ error: "Invalid user" });
+    return;
+  }
   //Check if has credit
   const { Item } = await client.send(
     new GetItemCommand({
