@@ -129,7 +129,13 @@ const Dashboard = (props) => {
           ))}
         </div>
         {resultingTimestamps.length > 0 && (
-          <button onClick={copyToClipboard}>Copy Text</button>
+          <>
+            {copySuccess ? (
+              <button>Copied</button>
+            ) : (
+              <button onClick={copyToClipboard}>Copy Text</button>
+            )}
+          </>
         )}
       </>
     </div>

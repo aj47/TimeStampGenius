@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 function YouTubeInput(props) {
-  const [videoId, setVideoId] = useState('');
+  const [videoId, setVideoId] = useState("");
 
   const handleInputChange = (event) => {
     setVideoId(event.target.value);
@@ -9,15 +9,20 @@ function YouTubeInput(props) {
 
   const handleSubmit = (event) => {
     console.log(`Submitted YouTube Video ID: ${videoId}`);
-		props.onSubmit(videoId);
+    props.onSubmit(videoId);
     event.preventDefault();
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{marginBottom: 30}}>
+    <form onSubmit={handleSubmit} style={{ marginBottom: 30 }}>
       <label>
         YouTube Video URL:
-        <input type="text" value={videoId} onChange={handleInputChange} />
+        <input
+          type="text"
+          value={videoId}
+          onChange={handleInputChange}
+          placeholder="https://www.youtube.com/watch?v=xzZVni4OcfE"
+        />
       </label>
       <button type="submit">Submit</button>
     </form>
