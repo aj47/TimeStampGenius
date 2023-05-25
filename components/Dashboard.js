@@ -6,15 +6,33 @@ const Dashboard = (props) => {
   const [processingVideo, setProcessingVideo] = useState(false);
   const [resultingTimestamps, setResultingTimestamps] = useState([]);
   const [credits, setCredits] = useState(0);
-  const onSubmitVideoId = async (id) => {
+
+  const extractVideoId = (url) => {
+    // Regular expression pattern to match YouTube video URLs with any domain name and formats
+    var pattern = /(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|.*\.)?youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|v\/|shorts\/)?([^&?/]+)/i;
+  
+    // Extract the video ID using the pattern
+    var match = url.match(pattern);
+  
+    if (match && match[1]) {
+      // Return the extracted video ID
+      return match[1];
+    } else {
+      // Return null if the URL is not a valid YouTube video URL
+      return null;
+    }
+  }
+
+  const onSubmitVideoId = async (url) => {
     setProcessingVideo(true);
+    const videoId = extractVideoId(url);
     const transcriptionResult = await fetch("/api/getTranscription", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        id,
+        id: videoId,
       }),
     }).then((res) => res.json());
     // Loop through transcript
@@ -74,12 +92,10 @@ const Dashboard = (props) => {
           polishedTimeStamp,
         ]);
         setCredits((oldCredits) => oldCredits - 1);
-        console.log(polishedTimeStamp);
         chunkStartTime = 0;
         currentTextChunk = "";
       }
     }
-    console.log(transcriptionResult, "transcriptionResult");
     setProcessingVideo(false);
   };
   return (
