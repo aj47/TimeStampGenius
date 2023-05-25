@@ -48,6 +48,7 @@ const Dashboard = (props) => {
         id: videoId,
       }),
     }).then((res) => res.json());
+    setResultingTimestamps(["00:00:00 - Intro"]);
     // Loop through transcript
     let currentTextChunk = "";
     let chunkSummaries = "";
