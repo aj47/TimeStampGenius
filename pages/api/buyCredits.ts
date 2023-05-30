@@ -10,9 +10,9 @@ const stripe = Stripe(
 );
 
 const storeItems = new Map([
-  [1, { priceInCents: 500, name: "50 credits", credits: 50 }],
-  [2, { priceInCents: 900, name: "100 credits", credits: 100 }],
-  [3, { priceInCents: 2000, name: "300 credits", credits: 3000 }],
+  [1, { priceInCents: 500, name: "500 credits", credits: 500 }],
+  [2, { priceInCents: 900, name: "1000 credits", credits: 1000 }],
+  [3, { priceInCents: 2000, name: "3000 credits", credits: 30000 }],
 ]);
 
 export default async function handler(

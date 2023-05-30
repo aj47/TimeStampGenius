@@ -25,21 +25,21 @@ const NavBar = (props) => {
               buyCredits(1);
             }}
           >
-            50 credits for $5
+            500 credits for $5
           </button>
           <button
             onClick={() => {
               buyCredits(2);
             }}
           >
-            100 credits for $9
+            1000 credits for $9
           </button>
           <button
             onClick={() => {
               buyCredits(3);
             }}
           >
-            300 credits for $20
+            3000 credits for $20
           </button>
         </div>
       </div>
