@@ -76,6 +76,7 @@ const NavBar = (props) => {
   return (
     <div className="navbar">
       {buyCreditsModalOpen && <BuyCreditOptions />}
+      <p style={{marginRight: 'auto', color: 'red'}}>FIRE SALE! Credits are now 10 times cheaper! (Limited time)</p>
       <div>Credits: {props.credits}</div>
       {!props.freeTrial && (
         <>
