@@ -25,7 +25,7 @@ export default async function handler(req, res) {
       },
     })
   );
-  let initialCredit = 25
+  let initialCredit = 100
   // Create user with credit if doesn't already exist
   if (!Item) {
     Item = await client.send(
