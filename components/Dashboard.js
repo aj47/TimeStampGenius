@@ -48,16 +48,20 @@ const Dashboard = (props) => {
       body: JSON.stringify({
         id: videoId,
       }),
-    }).then((res) => res.json()).catch((e) => {
-      hasTranscript = false;
-      console.log(e, "e");
-    });
+    })
+      .then((res) => res.json())
+      .catch((e) => {
+        hasTranscript = false;
+        console.log(e, "e");
+      });
     if (!hasTranscript) {
-      setResultingTimestamps(["ERROR: - Selected Youtube video has transcripts disabled"]);
+      setResultingTimestamps([
+        "ERROR: - Selected Youtube video has transcripts disabled",
+      ]);
       setProcessingVideo(false);
       return;
     }
-    setResultingTimestamps(["00:00:00 - Intro"]);
+    setResultingTimestamps(["00:00:00 -   Intro"]);
     // Loop through transcript
     let currentTextChunk = "";
     let chunkSummaries = "";
@@ -117,12 +121,12 @@ const Dashboard = (props) => {
           ...resultingTimestamps,
           polishedTimeStamp,
         ]);
+        document.querySelector('#timestamp-textarea')?.scrollTo(0,document.querySelector('#timestamp-textarea')?.scrollHeight)
         setCredits((oldCredits) => oldCredits - 1);
         chunkStartTime = 0;
         currentTextChunk = "";
       }
     }
-    setProcessingVideo(false);
   };
   return (
     <div className="dashboard">
@@ -131,15 +135,23 @@ const Dashboard = (props) => {
         setCredits={setCredits}
         freeTrial={props.freeTrial}
       />
-      {!processingVideo && <YouTubeInput onSubmit={onSubmitVideoId} />}
+      {processingVideo ? (
+        <button
+          onClick={() => {
+            setProcessingVideo(false);
+          }}
+        >
+          Back
+        </button>
+      ) : (
+        <YouTubeInput onSubmit={onSubmitVideoId} />
+      )}
       <>
         {resultingTimestamps.length === 0 && processingVideo && (
           <p>processing...</p>
         )}
         <div className="timestamps" ref={timestampDivRef}>
-          {resultingTimestamps.map((line, index) => (
-            <div key={index}>{line}</div>
-          ))}
+          <textarea id="timestamp-textarea" value={resultingTimestamps.join("\n")} rows={4} cols={50} />
         </div>
         {resultingTimestamps.length > 0 && (
           <>
