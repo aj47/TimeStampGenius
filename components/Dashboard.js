@@ -121,7 +121,12 @@ const Dashboard = (props) => {
           ...resultingTimestamps,
           polishedTimeStamp,
         ]);
-        document.querySelector('#timestamp-textarea')?.scrollTo(0,document.querySelector('#timestamp-textarea')?.scrollHeight)
+        document
+          .querySelector("#timestamp-textarea")
+          ?.scrollTo(
+            0,
+            document.querySelector("#timestamp-textarea")?.scrollHeight
+          );
         setCredits((oldCredits) => oldCredits - 1);
         chunkStartTime = 0;
         currentTextChunk = "";
@@ -150,11 +155,16 @@ const Dashboard = (props) => {
         {resultingTimestamps.length === 0 && processingVideo && (
           <p>processing...</p>
         )}
-        <div className="timestamps" ref={timestampDivRef}>
-          <textarea id="timestamp-textarea" value={resultingTimestamps.join("\n")} rows={4} cols={50} />
-        </div>
         {resultingTimestamps.length > 0 && (
           <>
+            <div className="timestamps" ref={timestampDivRef}>
+              <textarea
+                id="timestamp-textarea"
+                value={resultingTimestamps.join("\n")}
+                rows={4}
+                cols={50}
+              />
+            </div>
             {copySuccess ? (
               <button>Copied</button>
             ) : (

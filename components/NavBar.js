@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
+import tsgLogo from "@/public/tsg-logo.svg";
 
 const NavBar = (props) => {
   const [buyCreditsModalOpen, setBuyCreditsModalOpen] = useState(false);
@@ -75,6 +77,13 @@ const NavBar = (props) => {
 
   return (
     <div className="navbar">
+      <Image
+        width={150}
+        style={{ marginRight: "auto", padding: 2 }}
+        priority
+        src={tsgLogo}
+        alt="Follow us on Twitter"
+      />
       {buyCreditsModalOpen && <BuyCreditOptions />}
       <div>Credits: {props.credits}</div>
       {!props.freeTrial && (
