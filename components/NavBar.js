@@ -78,35 +78,37 @@ const NavBar = (props) => {
   return (
     <div className="navbar">
       <Image
-        width={150}
-        style={{ marginRight: "auto", padding: 2 }}
+        height={40}
+        style={{ padding: 2, marginRight: 'auto', marginLeft: 'calc(50% - 15px)' }}
         priority
         src={tsgLogo}
         alt="Follow us on Twitter"
       />
       {buyCreditsModalOpen && <BuyCreditOptions />}
-      <div>Credits: {props.credits}</div>
-      {!props.freeTrial && (
-        <>
-          {buyCreditsModalOpen ? (
-            <button
-              onClick={() => {
-                setBuyCreditsModalOpen(false);
-              }}
-            >
-              X
-            </button>
-          ) : (
-            <button
-              onClick={() => {
-                setBuyCreditsModalOpen(true);
-              }}
-            >
-              Buy Credits
-            </button>
-          )}
-        </>
-      )}
+      <div style={{display: 'flex', alignItems: 'center'}}>
+        <div>Credits: {props.credits}</div>
+        {!props.freeTrial && (
+          <>
+            {buyCreditsModalOpen ? (
+              <button
+                onClick={() => {
+                  setBuyCreditsModalOpen(false);
+                }}
+              >
+                X
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  setBuyCreditsModalOpen(true);
+                }}
+              >
+                Buy Credits
+              </button>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 };
