@@ -112,16 +112,25 @@ button {
 }
 
 button.primary {
-  color: #FFE5EC;
-  background-color: 	#6a7fdb;
+  background-color: #ffe5ec;
+  color: #6a7fdb;
 }
 
 button.primary:hover {
-  background-color: #FFE5EC;
-  color: 	#6a7fdb;
+  color: #ffe5ec;
+  background-color: #6a7fdb;
 }
 
 .youtube-player {
   width: 80%;
   height: 500px;
+}
+
+body {
+  /* CSS HEX */
+  --primary-dark: #fb6f93ff;
+  --primary-light: #ffe5ecff;
+  --secondary-dark: #6a7fdbff;
+  --secondary-light: #81d6e3ff;
+  --black: #383d3bff;
 }
