@@ -109,6 +109,17 @@ button {
   border-radius: 20px;
   font-weight: 900;
   cursor: pointer;
+  border: 2px solid;
+}
+
+button.secondary {
+  color: #ffe5ec;
+  background-color: #6a7fdb;
+}
+
+button.secondary:hover {
+  background-color: #ffe5ec;
+  color: #6a7fdb;
 }
 
 button.primary {

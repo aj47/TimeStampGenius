@@ -13,6 +13,8 @@
 .dashboard button[type="submit"] {
   margin-top: 1rem;
   width: 100%;
+  border-radius: 5px;
+  font-size: 1.5rem;
 }
 
 .navbar {
@@ -27,9 +29,9 @@
   align-items: center;
 }
 .navbar button {
+  padding: 10px 20px;
   margin-left: 15px;;
   font-size: 0.75rem;
-  padding: 2px 5px;
 }
 
 .buy-credit-modal {

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { signOut } from "next-auth/react";
 import Image from "next/image";
-import tsgLogo from "@/public/tsg-logo.svg";
+import tsgLogo from "@/public/tsg-logo-long.svg";
 
 const NavBar = (props) => {
   const [buyCreditsModalOpen, setBuyCreditsModalOpen] = useState(false);
@@ -77,15 +78,27 @@ const NavBar = (props) => {
 
   return (
     <div className="navbar">
+      <button
+        style={{ marginRight: "auto", opacity: 0.5, marginLeft: 0 }}
+        onClick={() => signOut()}
+      >
+        Sign out
+      </button>
       <Image
         height={40}
-        style={{ padding: 2, marginRight: 'auto', marginLeft: 'calc(50% - 15px)' }}
+        style={{
+          pointerEvents:'none',
+          padding: 2,
+          width: "calc(100vw - 45px)",
+          position: "absolute",
+          marginRight: -10,
+        }}
         priority
         src={tsgLogo}
         alt="Timestamp Genius"
       />
       {buyCreditsModalOpen && <BuyCreditOptions />}
-      <div style={{display: 'flex', alignItems: 'center'}}>
+      <div style={{ display: "flex", alignItems: "center" }}>
         <div>Credits: {props.credits}</div>
         {!props.freeTrial && (
           <>
@@ -99,6 +112,7 @@ const NavBar = (props) => {
               </button>
             ) : (
               <button
+                className="primary"
                 onClick={() => {
                   setBuyCreditsModalOpen(true);
                 }}

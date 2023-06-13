@@ -142,6 +142,13 @@ const Dashboard = (props) => {
       />
       {processingVideo ? (
         <button
+          style={{
+            fontSize: "1rem",
+            padding: "5px 20px",
+            marginBottom: 10,
+            marginRight: "auto",
+            marginLeft: 52,
+          }}
           onClick={() => {
             setProcessingVideo(false);
           }}
@@ -166,9 +173,17 @@ const Dashboard = (props) => {
               />
             </div>
             {copySuccess ? (
-              <button>Copied</button>
+              <button className="primary" style={{ marginTop: 15 }}>
+                Copied
+              </button>
             ) : (
-              <button onClick={copyToClipboard}>Copy Text</button>
+              <button
+                onClick={copyToClipboard}
+                className="primary"
+                style={{ marginTop: 15 }}
+              >
+                Copy Text
+              </button>
             )}
           </>
         )}

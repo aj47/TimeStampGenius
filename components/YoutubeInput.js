@@ -28,7 +28,7 @@ function YouTubeInput(props) {
           placeholder="https://www.youtube.com/watch?v=xzZVni4OcfE"
         />
       </label>
-      <button type="submit" style={{padding: 5}}>Submit</button>
+      <button className="primary" type="submit" style={{padding: 5}}>Submit</button>
     </form>
   );
 }

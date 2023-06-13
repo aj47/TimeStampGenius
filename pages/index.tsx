@@ -1,4 +1,4 @@
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signIn } from "next-auth/react";
 import Dashboard from "@/components/Dashboard";
 import Image from "next/image";
 import tsgLogo from "@/public/tsg-logo-long.svg";
@@ -16,7 +16,6 @@ export default function Home() {
       {session ? (
         <>
           <Dashboard />
-          <button onClick={() => signOut()}>Sign out</button>
         </>
       ) : (
         <div
