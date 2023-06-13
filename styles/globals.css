@@ -1,11 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
+* {
+  font-family: "Open Sans", sans-serif;
+}
 :root {
   --max-width: 1100px;
   --border-radius: 12px;
-  --font-mono: ui-monospace, Menlo, Monaco, 'Cascadia Mono', 'Segoe UI Mono',
-    'Roboto Mono', 'Oxygen Mono', 'Ubuntu Monospace', 'Source Code Pro',
-    'Fira Mono', 'Droid Sans Mono', 'Courier New', monospace;
-    font-family: 'Open Sans', sans-serif;
 
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -89,12 +88,7 @@ body {
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  background: #1e2124;
 }
 
 a {
@@ -109,5 +103,25 @@ a {
 }
 
 button {
+  padding: 10px 35px;
+  font-size: 2rem;
+  border: none;
+  border-radius: 20px;
+  font-weight: 900;
   cursor: pointer;
+}
+
+button.primary {
+  color: #FFE5EC;
+  background-color: 	#6a7fdb;
+}
+
+button.primary:hover {
+  background-color: #FFE5EC;
+  color: 	#6a7fdb;
+}
+
+.youtube-player {
+  width: 80%;
+  height: 500px;
 }

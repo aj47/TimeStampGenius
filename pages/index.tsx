@@ -1,5 +1,7 @@
 import { useSession, signIn, signOut } from "next-auth/react";
 import Dashboard from "@/components/Dashboard";
+import Image from "next/image";
+import tsgLogo from "@/public/tsg-logo-long.svg";
 
 export default function Home() {
   const { data: session } = useSession();
@@ -24,8 +26,32 @@ export default function Home() {
             alignItems: "center",
           }}
         >
-          <h1 style={{ margin: 30 }}>Timestamp Genius (Beta)</h1>
-          <button onClick={() => signIn()}>Sign in</button>
+          <Image
+            height={70}
+            style={{
+              margin: 25,
+              marginBottom: 50
+            }}
+            priority
+            src={tsgLogo}
+            alt="Timestamp Genius"
+          />
+          <iframe
+            width="560"
+            height="315"
+            src="https://www.youtube.com/embed/ZqoVJv3LKGE"
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          ></iframe>
+          <button
+            style={{ marginTop: 50 }}
+            className="primary"
+            onClick={() => signIn()}
+          >
+            Start
+          </button>
         </div>
       )}
     </>

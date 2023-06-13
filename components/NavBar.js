@@ -82,7 +82,7 @@ const NavBar = (props) => {
         style={{ padding: 2, marginRight: 'auto', marginLeft: 'calc(50% - 15px)' }}
         priority
         src={tsgLogo}
-        alt="Follow us on Twitter"
+        alt="Timestamp Genius"
       />
       {buyCreditsModalOpen && <BuyCreditOptions />}
       <div style={{display: 'flex', alignItems: 'center'}}>
