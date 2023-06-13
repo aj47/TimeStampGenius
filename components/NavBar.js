@@ -89,9 +89,9 @@ const NavBar = (props) => {
         style={{
           pointerEvents:'none',
           padding: 2,
-          width: "calc(100vw - 45px)",
+          width: "calc(100vw - 49px)",
           position: "absolute",
-          marginRight: -10,
+          marginRight: -15,
         }}
         priority
         src={tsgLogo}
