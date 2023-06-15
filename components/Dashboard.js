@@ -173,7 +173,10 @@ const Dashboard = (props) => {
               />
             </div>
             {copySuccess ? (
-              <button className="primary" style={{ marginTop: 15 }}>
+              <button
+                className="primary"
+                style={{ marginTop: 15, fontSize: "1rem" }}
+              >
                 Copied
               </button>
             ) : (
