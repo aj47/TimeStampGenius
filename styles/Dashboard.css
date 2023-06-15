@@ -30,12 +30,17 @@
 }
 .navbar button {
   padding: 10px 20px;
-  margin-left: 15px;;
+  margin-left: 15px;
   font-size: 0.75rem;
+}
+@media screen and (max-width: 500px) {
+  .navbar .logo {
+    display: none;
+  }
 }
 
 .buy-credit-modal {
-  position:absolute;
+  position: absolute;
   padding: 15px;
   right: 25px;
   top: 49px;

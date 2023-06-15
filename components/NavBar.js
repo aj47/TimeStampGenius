@@ -94,6 +94,7 @@ const NavBar = (props) => {
           transform: 'translateX(-50%)'
         }}
         priority
+        className="logo"
         src={tsgLogo}
         alt="Timestamp Genius"
       />
