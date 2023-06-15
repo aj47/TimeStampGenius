@@ -87,11 +87,11 @@ const NavBar = (props) => {
       <Image
         height={40}
         style={{
-          pointerEvents:'none',
+          pointerEvents: "none",
           padding: 2,
-          width: "calc(100vw - 49px)",
           position: "absolute",
-          marginRight: -15,
+          left: '50%',
+          transform: 'translateX(-50%)'
         }}
         priority
         src={tsgLogo}
@@ -99,7 +99,6 @@ const NavBar = (props) => {
       />
       {buyCreditsModalOpen && <BuyCreditOptions />}
       <div style={{ display: "flex", alignItems: "center" }}>
-        <div>Credits: {props.credits}</div>
         {!props.freeTrial && (
           <>
             {buyCreditsModalOpen ? (
@@ -117,7 +116,7 @@ const NavBar = (props) => {
                   setBuyCreditsModalOpen(true);
                 }}
               >
-                Buy Credits
+                Credits: {props.credits}
               </button>
             )}
           </>

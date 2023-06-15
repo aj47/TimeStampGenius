@@ -7,10 +7,10 @@ const Dashboard = (props) => {
   const [resultingTimestamps, setResultingTimestamps] = useState([]);
   const [copySuccess, setCopySuccess] = useState(false);
   const [credits, setCredits] = useState(0);
-  const timestampDivRef = useRef(null);
+  const textAreaRef = useRef(null);
 
   const copyToClipboard = () => {
-    const textToCopy = timestampDivRef.current.innerText;
+    const textToCopy = textAreaRef.current.value;
     navigator.clipboard.writeText(textToCopy).then(() => {
       setCopySuccess(true);
       setTimeout(() => {
@@ -52,7 +52,6 @@ const Dashboard = (props) => {
       .then((res) => res.json())
       .catch((e) => {
         hasTranscript = false;
-        console.log(e, "e");
       });
     if (!hasTranscript) {
       setResultingTimestamps([
@@ -143,11 +142,11 @@ const Dashboard = (props) => {
       {processingVideo ? (
         <button
           style={{
-            fontSize: "1rem",
+            fontSize: "0.8rem",
             padding: "5px 20px",
             marginBottom: 10,
             marginRight: "auto",
-            marginLeft: 52,
+            marginLeft: 20,
           }}
           onClick={() => {
             setProcessingVideo(false);
@@ -164,8 +163,9 @@ const Dashboard = (props) => {
         )}
         {resultingTimestamps.length > 0 && (
           <>
-            <div className="timestamps" ref={timestampDivRef}>
+            <div className="timestamps">
               <textarea
+                ref={textAreaRef}
                 id="timestamp-textarea"
                 value={resultingTimestamps.join("\n")}
                 rows={4}
@@ -180,7 +180,7 @@ const Dashboard = (props) => {
               <button
                 onClick={copyToClipboard}
                 className="primary"
-                style={{ marginTop: 15 }}
+                style={{ marginTop: 15, fontSize: "1rem" }}
               >
                 Copy Text
               </button>

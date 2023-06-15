@@ -18,8 +18,6 @@ export default async function handler(
   res: NextApiResponse<Data>
 ) {
   const session = await stripe.checkout.sessions.retrieve(req.query.session_id);
-  console.log(session.metadata.userId, "session.medadata");
-  console.log(session.metadata.credits, "credits");
   await client.send(
     new UpdateItemCommand({
       TableName: process.env.USER_TABLE,

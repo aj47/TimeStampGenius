@@ -62,10 +62,17 @@
   margin: 5px;
 }
 
+.timestamps textarea {
+  width: 100%;
+  height: 100%;
+}
+
 .timestamps {
-  max-height: 50vh;  
+  height: calc(100vh - 220px);
+  /* max-height: 50vh;   */
   overflow: scroll;
   border: 1px solid grey;
   padding: 5px;
   border-radius: 5px;
+  width: calc(100vw - 42px);
 }
