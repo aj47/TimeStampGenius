@@ -2,6 +2,7 @@ import { useSession, signIn } from "next-auth/react";
 import Dashboard from "@/components/Dashboard";
 import Image from "next/image";
 import tsgLogo from "@/public/tsg-logo-long.svg";
+import screenshot from "@/public/screenshot2.png";
 
 export default function Home() {
   const { data: session } = useSession();
@@ -29,21 +30,27 @@ export default function Home() {
             height={70}
             style={{
               margin: 25,
-              marginBottom: 50
             }}
             priority
             src={tsgLogo}
             alt="Timestamp Genius"
           />
-          <iframe
+          <div className="hero-container">
+            <Image src={screenshot} alt="screenshot" className="screenshot1" />
+            <h1 className="hero-title">
+              <span className="highlight">Youtube Timestamp Generation</span>{" "}
+              with AI!
+            </h1>
+            {/* <iframe
             width="560"
             height="315"
             src="https://www.youtube.com/embed/ZqoVJv3LKGE"
             title="YouTube video player"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          ></iframe>
+          ></iframe> */}
+          </div>
           <button
-            style={{ marginTop: 50 }}
+            style={{ marginTop: -80 }}
             className="primary"
             onClick={() => signIn()}
           >
