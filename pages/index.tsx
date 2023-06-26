@@ -62,6 +62,7 @@ export default function Home() {
           </button>
         </div>
       )}
+      <div className="footer"> Any questions? Email arash@appricot.io</div>
     </>
   );
 }
