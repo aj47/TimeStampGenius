@@ -3,12 +3,15 @@ import Dashboard from "@/components/Dashboard";
 import Image from "next/image";
 import tsgLogo from "@/public/tsg-logo-long.svg";
 import screenshot from "@/public/screenshot2.png";
+import Head from "next/head";
 
 export default function Home() {
   const { data: session } = useSession();
   return (
     <>
-      <title>Timestamp Genius</title>
+      <Head>
+        <title>Timestamp Genius</title>
+      </Head>
       {/* {session ? (
         <p>Signed in as {session.user?.email} </p>
       ) : (
@@ -24,6 +27,7 @@ export default function Home() {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
+            overflow: "hidden",
           }}
         >
           <Image
