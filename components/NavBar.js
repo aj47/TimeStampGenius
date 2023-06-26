@@ -60,7 +60,11 @@ const NavBar = (props) => {
         headers: {
           "Content-Type": "application/json",
         },
-      }).then((res) => res.json());
+      })
+        .then((res) => res.json())
+        .catch((e) => {
+          document.location.href = "/";
+        });
     } else {
       response = await fetch("/api/getCredits", {
         method: "GET",
@@ -90,8 +94,8 @@ const NavBar = (props) => {
           pointerEvents: "none",
           padding: 2,
           position: "absolute",
-          left: '50%',
-          transform: 'translateX(-50%)'
+          left: "50%",
+          transform: "translateX(-50%)",
         }}
         priority
         className="logo"
@@ -100,28 +104,27 @@ const NavBar = (props) => {
       />
       {buyCreditsModalOpen && <BuyCreditOptions />}
       <div style={{ display: "flex", alignItems: "center" }}>
-        {!props.freeTrial && (
-          <>
-            {buyCreditsModalOpen ? (
-              <button
-                onClick={() => {
-                  setBuyCreditsModalOpen(false);
-                }}
-              >
-                X
-              </button>
-            ) : (
-              <button
-                className="primary"
-                onClick={() => {
-                  setBuyCreditsModalOpen(true);
-                }}
-              >
-                Credits: {props.credits}
-              </button>
-            )}
-          </>
-        )}
+        <>
+          {buyCreditsModalOpen ? (
+            <button
+              onClick={() => {
+                setBuyCreditsModalOpen(false);
+              }}
+            >
+              X
+            </button>
+          ) : (
+            <button
+              className="primary"
+              onClick={() => {
+                if (props.freeTrial) return;
+                setBuyCreditsModalOpen(true);
+              }}
+            >
+              Credits: {props.credits}
+            </button>
+          )}
+        </>
       </div>
     </div>
   );

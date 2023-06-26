@@ -4,8 +4,16 @@ import Image from "next/image";
 import tsgLogo from "@/public/tsg-logo-long.svg";
 import screenshot from "@/public/screenshot2.png";
 import Head from "next/head";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+  const [userId, setUserId] = useState<String | null>("");
+  useEffect(() => {
+    const URLParams = new URLSearchParams(window.location.search);
+    const user = URLParams.get("user");
+    console.log(user, "user");
+    if (user?.indexOf("@") === -1) setUserId(URLParams.get("user"));
+  }, []);
   const { data: session } = useSession();
   return (
     <>
@@ -21,6 +29,8 @@ export default function Home() {
         <>
           <Dashboard />
         </>
+      ) : userId ? (
+        <Dashboard freeTrial={userId} />
       ) : (
         <div
           style={{
