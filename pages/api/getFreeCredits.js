@@ -5,6 +5,7 @@ import {
   UpdateItemCommand,
 } from "@aws-sdk/client-dynamodb";
 const client = new DynamoDBClient({});
+const logger = require("pino")();
 
 export default async function handler(req, res) {
   //Check if has credit
@@ -16,6 +17,11 @@ export default async function handler(req, res) {
       },
     })
   );
-
+  logger.info({
+    user: {
+      email: req.body.user
+    },
+    event: { type: "request", tag: "api" },
+  });
   res.status(200).json({ credits: parseInt(Item.credit.N) });
 }
