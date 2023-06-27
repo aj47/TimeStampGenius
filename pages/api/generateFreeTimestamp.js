@@ -4,6 +4,7 @@ import {
   GetItemCommand,
   UpdateItemCommand,
 } from "@aws-sdk/client-dynamodb";
+const logger = require('pino')()
 const client = new DynamoDBClient({});
 const { Configuration, OpenAIApi } = require("openai");
 
@@ -52,5 +53,15 @@ export default async function handler(req, res) {
       ReturnValues: "UPDATED_NEW",
     })
   );
+  logger.info({
+    user: {
+      email: req.body.user
+    },
+    transcript: {
+      text: req.body.currentTextChunk,
+      completion: completion.data.choices[0].text
+    },
+    event: { type: "request", tag: "api" },
+  });
   res.status(200).json({ completionText: completion.data.choices[0].text });
 }
