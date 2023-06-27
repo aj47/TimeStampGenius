@@ -1,0 +1,57 @@
+{
+  "event_message": "lambda | 405 | www.timestampgenius.com | /api/getTranscription | 68.45.46.243 | Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.5 Safari/605.1.15",
+  "id": "7e1761b0-a59a-45cb-8816-82512f652869",
+  "metadata": {
+    "deploymentId": "dpl_42TmebGPUEVznp7GGCm8Awy92Tux",
+    "host": "time-stamp-genius-7t34nfxva-aj47.vercel.app",
+    "id": "1687843644128122974693976964",
+    "message": "START RequestId: 054530e9-57ee-401d-8126-182523ae9449 Version: $LATEST\n2023-06-27T05:27:24.231Z\t054530e9-57ee-401d-8126-182523ae9449\tERROR\tTypeError: Cannot read properties of null (reading 'length')\n    at YoutubeTranscript.retrieveVideoId (/var/task/node_modules/youtube-transcript/dist/youtube-transcript.common.js:238:21)\n    at Function.<anonymous> (/var/task/node_modules/youtube-transcript/dist/youtube-transcript.common.js:91:43)\n    at step (/var/task/node_modules/youtube-transcript/dist/youtube-transcript.common.js:62:23)\n    at Object.next (/var/task/node_modules/youtube-transcript/dist/youtube-transcript.common.js:43:53)\n    at /var/task/node_modules/youtube-transcript/dist/youtube-transcript.common.js:36:71\n    at new Promise (<anonymous>)\n    at __awaiter (/var/task/node_modules/youtube-transcript/dist/youtube-transcript.common.js:32:12)\n    at YoutubeTranscript.fetchTranscript (/var/task/node_modules/youtube-transcript/dist/youtube-transcript.common.js:86:16)\n    at handler (/var/task/.next/server/pages/api/getTranscription.js:25:29)\n    at Object.apiResolver (/var/task/node_modules/next/dist/server/api-utils/node.js:372:15)\n2023-06-27T05:27:24.231Z\t054530e9-57ee-401d-8126-182523ae9449\tERROR\tTypeError: Cannot read properties of null (reading 'length')\n    at YoutubeTranscript.retrieveVideoId (/var/task/node_modules/youtube-transcript/dist/youtube-transcript.common.js:238:21)\n    at Function.<anonymous> (/var/task/node_modules/youtube-transcript/dist/youtube-transcript.common.js:91:43)\n    at step (/var/task/node_modules/youtube-transcript/dist/youtube-transcript.common.js:62:23)\n    at Object.next (/var/task/node_modules/youtube-transcript/dist/youtube-transcript.common.js:43:53)\n    at /var/task/node_modules/youtube-transcript/dist/youtube-transcript.common.js:36:71\n    at new Promise (<anonymous>)\n    at __awaiter (/var/task/node_modules/youtube-transcript/dist/youtube-transcript.common.js:32:12)\n    at YoutubeTranscript.fetchTranscript (/var/task/node_modules/youtube-transcript/dist/youtube-transcript.common.js:86:16)\n    at handler (/var/task/.next/server/pages/api/getTranscription.js:25:29)\n    at Object.apiResolver (/var/task/node_modules/next/dist/server/api-utils/node.js:372:15)\nRequestId: 054530e9-57ee-401d-8126-182523ae9449 Error: Runtime exited without providing a reason\nRuntime.ExitError\nEND RequestId: 054530e9-57ee-401d-8126-182523ae9449\nREPORT RequestId: 054530e9-57ee-401d-8126-182523ae9449\tDuration: 135.19 ms\tBilled Duration: 136 ms\tMemory Size: 1024 MB\tMax Memory Used: 134 MB\t\n",
+    "parsedLambdaMessage": {
+      "lines": [
+        {
+          "level": "error",
+          "message": "TypeError: Cannot read properties of null (reading 'length')\n    at YoutubeTranscript.retrieveVideoId (/var/task/node_modules/youtube-transcript/dist/youtube-transcript.common.js:238:21)\n    at Function.<anonymous> (/var/task/node_modules/youtube-transcript/dist/youtube-transcript.common.js:91:43)\n    at step (/var/task/node_modules/youtube-transcript/dist/youtube-transcript.common.js:62:23)\n    at Object.next (/var/task/node_modules/youtube-transcript/dist/youtube-transcript.common.js:43:53)\n    at /var/task/node_modules/youtube-transcript/dist/youtube-transcript.common.js:36:71\n    at new Promise (<anonymous>)\n    at __awaiter (/var/task/node_modules/youtube-transcript/dist/youtube-transcript.common.js:32:12)\n    at YoutubeTranscript.fetchTranscript (/var/task/node_modules/youtube-transcript/dist/youtube-transcript.common.js:86:16)\n    at handler (/var/task/.next/server/pages/api/getTranscription.js:25:29)\n    at Object.apiResolver (/var/task/node_modules/next/dist/server/api-utils/node.js:372:15)",
+          "timestamp": "2023-06-27T05:27:24.231Z"
+        },
+        {
+          "level": "error",
+          "message": "TypeError: Cannot read properties of null (reading 'length')\n    at YoutubeTranscript.retrieveVideoId (/var/task/node_modules/youtube-transcript/dist/youtube-transcript.common.js:238:21)\n    at Function.<anonymous> (/var/task/node_modules/youtube-transcript/dist/youtube-transcript.common.js:91:43)\n    at step (/var/task/node_modules/youtube-transcript/dist/youtube-transcript.common.js:62:23)\n    at Object.next (/var/task/node_modules/youtube-transcript/dist/youtube-transcript.common.js:43:53)\n    at /var/task/node_modules/youtube-transcript/dist/youtube-transcript.common.js:36:71\n    at new Promise (<anonymous>)\n    at __awaiter (/var/task/node_modules/youtube-transcript/dist/youtube-transcript.common.js:32:12)\n    at YoutubeTranscript.fetchTranscript (/var/task/node_modules/youtube-transcript/dist/youtube-transcript.common.js:86:16)\n    at handler (/var/task/.next/server/pages/api/getTranscription.js:25:29)\n    at Object.apiResolver (/var/task/node_modules/next/dist/server/api-utils/node.js:372:15)\nRequestId: 054530e9-57ee-401d-8126-182523ae9449 Error: Runtime exited without providing a reason\nRuntime.ExitError",
+          "timestamp": "2023-06-27T05:27:24.231Z"
+        }
+      ],
+      "parse_status": "full",
+      "report": {
+        "billed_duration_ms": 136,
+        "duration_ms": 135,
+        "max_memory_used_mb": 134,
+        "memory_size_mb": 1024
+      },
+      "request_id": "054530e9-57ee-401d-8126-182523ae9449"
+    },
+    "path": "api/getTranscription",
+    "projectId": "prj_gtsvCXC6wVQt4MFN45bJVxAJNscy",
+    "projectName": "time-stamp-genius",
+    "proxy": {
+      "clientIp": "68.45.46.243",
+      "errorCode": "FUNCTION_INVOCATION_FAILED",
+      "host": "www.timestampgenius.com",
+      "lambdaRegion": "iad1",
+      "method": "POST",
+      "path": "/api/getTranscription",
+      "pathType": "FUNC",
+      "referer": "https://www.timestampgenius.com/",
+      "region": "cle1",
+      "scheme": "https",
+      "statusCode": 405,
+      "timestamp": 1687843644017,
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.5 Safari/605.1.15",
+      "vercelCache": "MISS",
+      "vercelId": "6vbvf-1687843644017-b651849cb4e9"
+    },
+    "requestId": "cle1::6vbvf-1687843644017-b651849cb4e9",
+    "source": "lambda",
+    "statusCode": -1,
+    "timestamp": 1687843644128
+  },
+  "timestamp": 1687843644128000
+}

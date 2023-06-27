@@ -7,6 +7,7 @@ import {
   PutItemCommand,
 } from "@aws-sdk/client-dynamodb";
 const client = new DynamoDBClient({});
+const logger = require("pino")();
 
 export default async function handler(req, res) {
   //Check if logged in
@@ -25,7 +26,7 @@ export default async function handler(req, res) {
       },
     })
   );
-  let initialCredit = 100
+  let initialCredit = 100;
   // Create user with credit if doesn't already exist
   if (!Item) {
     Item = await client.send(
@@ -42,5 +43,11 @@ export default async function handler(req, res) {
   }
   console.log(Item, "Item");
 
+  logger.info({
+    user: {
+      email: session?.user?.email,
+    },
+    event: { type: "request", tag: "api" },
+  });
   res.status(200).json({ credits: initialCredit });
 }
