@@ -6,7 +6,7 @@ import {
   GetItemCommand,
   UpdateItemCommand,
 } from "@aws-sdk/client-dynamodb";
-const logger = require('pino')()
+const logger = require("pino")();
 const client = new DynamoDBClient({});
 const { Configuration, OpenAIApi } = require("openai");
 
@@ -41,7 +41,7 @@ export default async function handler(req, res) {
   const completion = await openai.createCompletion({
     max_tokens: 3040,
     model: "text-davinci-003",
-    prompt: `take the following transcript spoken during a livestream and write a few words for a SHORT single line timestamp description: '${req.body.currentTextChunk}' `,
+    prompt: `write a SHORT (less than 5 words) SINGLE LINE in description, mentioning keywords based on the following spoken transcript: '${req.body.currentTextChunk}'`,
   });
 
   //Decrease credit
@@ -53,18 +53,18 @@ export default async function handler(req, res) {
       },
       UpdateExpression: "SET credit = credit - :val",
       ExpressionAttributeValues: {
-        ":val": { N: '1' },
+        ":val": { N: "1" },
       },
       ReturnValues: "UPDATED_NEW",
     })
   );
   logger.info({
     user: {
-      email: session?.user?.email
+      email: session?.user?.email,
     },
     transcript: {
       text: req.body.currentTextChunk,
-      completion: completion.data.choices[0].text
+      completion: completion.data.choices[0].text,
     },
     event: { type: "request", tag: "api" },
   });
