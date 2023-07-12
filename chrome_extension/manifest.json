@@ -1,0 +1,14 @@
+{
+    "name": "Timestamp Genius",
+    "version": "1.0.0",
+    "description": "Youtube Timestamp Generation with AI!",
+    "manifest_version": 3,
+    "author": "techfren",
+    "action":{
+        "default_popup": "index.html",
+        "default_title": "Timestamp Genius"
+    },
+		"permissions": [
+			"activeTab"
+		]
+}

@@ -1,6 +1,7 @@
 import type { AppProps } from "next/app";
 import { SessionProvider } from "next-auth/react";
 import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";
+import { Analytics } from '@vercel/analytics/react';
 import "../styles/Dashboard.css"
 import "../styles/globals.css"
 const client = new ApolloClient({
@@ -16,6 +17,7 @@ export default function App({
     <ApolloProvider client={client}>
         <SessionProvider session={session}>
           <Component {...pageProps} />
+          <Analytics />
         </SessionProvider>
     </ApolloProvider>
   );
