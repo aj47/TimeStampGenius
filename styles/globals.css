@@ -111,7 +111,6 @@ button {
   border-radius: 20px;
   font-weight: 900;
   cursor: pointer;
-  border: 2px solid;
 }
 
 button.secondary {
@@ -166,13 +165,12 @@ body {
 }
 
 .hero-title {
-  width: 500px;
+  /* width: 800px; */
   /* margin-left: auto; */
   font-weight: 900;
   color: #fb6f93;
-  text-align: right;
-  margin-right: 50px;
-  margin-top: 25px;
+  text-align: center;
+  /* margin-top: 25px; */
   font-size: 3rem;
   font-family: "Open Sans", sans-serif;
   font-family: "Rubik", sans-serif;
@@ -185,12 +183,10 @@ body {
 }
 
 .hero-container {
-  margin-right: auto;
-  margin-left: auto;
-  max-width: 1200px;
-  height: 460px;
+  height: 285px;
+  line-height: 3.5rem;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   width: 100vw;
 }

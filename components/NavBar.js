@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { signOut } from "next-auth/react";
+import { signIn, signOut } from "next-auth/react";
 import Image from "next/image";
 import tsgLogo from "@/public/tsg-logo-long.svg";
 
@@ -80,14 +80,51 @@ const NavBar = (props) => {
     updateCredits();
   }, []);
 
+  const popupCenter = (url, title) => {
+    const dualScreenLeft = window.screenLeft ?? window.screenX;
+    const dualScreenTop = window.screenTop ?? window.screenY;
+
+    const width =
+      window.innerWidth ?? document.documentElement.clientWidth ?? screen.width;
+
+    const height =
+      window.innerHeight ??
+      document.documentElement.clientHeight ??
+      screen.height;
+
+    const systemZoom = width / window.screen.availWidth;
+
+    const left = (width - 500) / 2 / systemZoom + dualScreenLeft;
+    const top = (height - 550) / 2 / systemZoom + dualScreenTop;
+
+    const newWindow = window.open(
+      url,
+      title,
+      `width=${500 / systemZoom},height=${
+        550 / systemZoom
+      },top=${top},left=${left}`
+    );
+
+    newWindow?.focus();
+  };
+
   return (
     <div className="navbar">
-      <button
-        style={{ marginRight: "auto", opacity: 0.5, marginLeft: 0 }}
-        onClick={() => signOut()}
-      >
-        Sign out
-      </button>
+      {props.status === "authenticated" ? (
+        <button
+          style={{ marginRight: "auto", opacity: 0.5, marginLeft: 0 }}
+          onClick={() => signOut()}
+        >
+          Logout
+        </button>
+      ) : (
+        <button
+          style={{ marginRight: "auto", opacity: 0.5, marginLeft: 0 }}
+          onClick={() => popupCenter("/google-signin", "Sample Sign In")}
+        >
+          Login with Google
+        </button>
+      )}
       <Image
         height={40}
         style={{
@@ -103,29 +140,31 @@ const NavBar = (props) => {
         alt="Timestamp Genius"
       />
       {buyCreditsModalOpen && <BuyCreditOptions />}
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <>
-          {buyCreditsModalOpen ? (
-            <button
-              onClick={() => {
-                setBuyCreditsModalOpen(false);
-              }}
-            >
-              X
-            </button>
-          ) : (
-            <button
-              className="primary"
-              onClick={() => {
-                if (props.freeTrial) return;
-                setBuyCreditsModalOpen(true);
-              }}
-            >
-              Credits: {props.credits}
-            </button>
-          )}
-        </>
-      </div>
+      {props.status === "authenticated" && (
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <>
+            {buyCreditsModalOpen ? (
+              <button
+                onClick={() => {
+                  setBuyCreditsModalOpen(false);
+                }}
+              >
+                X
+              </button>
+            ) : (
+              <button
+                className="primary"
+                onClick={() => {
+                  if (props.freeTrial) return;
+                  setBuyCreditsModalOpen(true);
+                }}
+              >
+                Credits: {props.credits}
+              </button>
+            )}
+          </>
+        </div>
+      )}
     </div>
   );
 };

@@ -19,7 +19,7 @@ function YouTubeInput(props) {
       style={{ marginBottom: 30, textAlign: "center", width: 350 }}
     >
       <label>
-        YouTube Video URL:
+        Enter YouTube Video URL:
         <input
           style={{padding: 5, textAlign: "center"}}
           type="text"

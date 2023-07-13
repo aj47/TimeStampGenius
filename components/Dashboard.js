@@ -1,8 +1,10 @@
 import React, { useRef, useState } from "react";
+import { useSession, signIn } from "next-auth/react";
 import NavBar from "./NavBar";
 import YouTubeInput from "./YoutubeInput";
 
 const Dashboard = (props) => {
+  const { data: session, status } = useSession();
   const [processingVideo, setProcessingVideo] = useState(false);
   const [resultingTimestamps, setResultingTimestamps] = useState([]);
   const [copySuccess, setCopySuccess] = useState(false);
@@ -83,15 +85,27 @@ const Dashboard = (props) => {
             }),
           }).then((res) => res.json());
         } else {
-          completionResult = await fetch("/api/generateTimestamp", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              currentTextChunk,
-            }),
-          }).then((res) => res.json());
+          if (status === "authenticated") {
+            completionResult = await fetch("/api/generateTimestamp", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                currentTextChunk,
+              }),
+            }).then((res) => res.json());
+          } else {
+            completionResult = await fetch("/api/generateFreeTimestampFromChrome", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                currentTextChunk,
+              }),
+            }).then((res) => res.json());
+          }
         }
         if (!completionResult.error && !completionResult.completionText) {
           onSubmitVideoId(url);
@@ -135,10 +149,18 @@ const Dashboard = (props) => {
   return (
     <div className="dashboard">
       <NavBar
+        session={session}
+        status={status}
         credits={credits}
         setCredits={setCredits}
         freeTrial={props.freeTrial}
       />
+      <div className="hero-container">
+        <h1 className="hero-title">
+          YouTube <span className="highlight">Timestamp Generation</span> with
+          AI!
+        </h1>
+      </div>
       {processingVideo ? (
         <button
           style={{
