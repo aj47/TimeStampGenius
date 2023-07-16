@@ -163,7 +163,6 @@ body {
   width: 500px;
   height: 500px;
 }
-
 .hero-title {
   /* width: 800px; */
   /* margin-left: auto; */
@@ -176,6 +175,12 @@ body {
   font-family: "Rubik", sans-serif;
 }
 
+@media screen and (max-width: 500px) {
+  .hero-title {
+    font-size: 2rem;
+  }
+}
+
 .hero-title .highlight {
   color: var(--secondary-light);
   font-family: "Open Sans", sans-serif;
@@ -183,7 +188,7 @@ body {
 }
 
 .hero-container {
-  height: 285px;
+  height: 210px;
   line-height: 3.5rem;
   display: flex;
   justify-content: center;
