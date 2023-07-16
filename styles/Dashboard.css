@@ -19,9 +19,9 @@
 
 .navbar {
   width: 100%;
-  padding: 5px 15px;
+  padding: 10px 15px;
   display: flex;
-  border: 1px solid grey;
+  border: 1px solid rgba(128, 128, 128, 0.209);
   border-radius: 5px;
   font-size: 0.75rem;
   margin-bottom: 15px;
