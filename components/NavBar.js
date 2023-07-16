@@ -77,7 +77,8 @@ const NavBar = (props) => {
   };
 
   useEffect(() => {
-    updateCredits();
+    if (props.status === "authenticated") 
+      updateCredits();
   }, []);
 
   const popupCenter = (url, title) => {
