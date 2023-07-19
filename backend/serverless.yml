@@ -7,15 +7,20 @@ provider:
   name: aws
   profile: appricot2
   runtime: nodejs18.x
+  stage: ${opt:stage, 'dev'}
+  environment:
+    DB: ${self:service}-${opt:stage, self:provider.stage}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+      Resource: "*"
 
 plugins:
-  - serverless-associate-waf
-
-# Associate WAF Web ACL with API Gateway of current stack
-custom:
-  associateWaf:
-    name: TSG-WAF-WebACL2
-    version: V2 #(optional) Regional | V2
+  - serverless-offline
 
 functions:
   api:
@@ -24,31 +29,28 @@ functions:
       - http:
           path: /
           method: get
+          cors: true
 
 resources:
   Resources:
-    WAFRegionalWebACL:
-      Type: "AWS::WAFv2::WebACL"
+    TimestampGeniusTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Delete
       Properties:
-        Name: TSG-WAF-WebAC2
-        Scope: REGIONAL
-        Description: WAF Regional Web ACL to Prevent HTTP Flood DDos Attack
-        DefaultAction:
-          Allow: {}
-        VisibilityConfig:
-          SampledRequestsEnabled: true
-          CloudWatchMetricsEnabled: true
-          MetricName: ApiGateway-HTTP-Flood-Prevent-Metric
-        Rules:
-          - Name: HTTP-Flood-Prevent-Rule
-            Priority: 0
-            Action:
-              Block: {}
-            VisibilityConfig:
-              SampledRequestsEnabled: true
-              CloudWatchMetricsEnabled: true
-              MetricName: HTTP-Flood-Prevent-Rule-Metric
-            Statement:
-              RateBasedStatement:
-                AggregateKeyType: IP
-                Limit: 100  # rate limit adjust as per your real traffic
+        AttributeDefinitions:
+          - AttributeName: "PK"
+            AttributeType: "S"
+          - AttributeName: "SK"
+            AttributeType: "S"
+        KeySchema:
+          - AttributeName: "PK"
+            KeyType: "HASH" 
+          - AttributeName: "SK"
+            KeyType: "RANGE"
+        ProvisionedThroughput:
+          ReadCapacityUnits:  1
+          WriteCapacityUnits: 1
+        TimeToLiveSpecification:
+            AttributeName: ttl
+            Enabled: true
+        TableName: ${self:provider.environment.DB}
