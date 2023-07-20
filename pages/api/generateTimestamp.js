@@ -38,11 +38,16 @@ export default async function handler(req, res) {
   }
 
   //Perform LLM call
-  const completion = await openai.createCompletion({
-    max_tokens: 3040,
-    model: "text-davinci-003",
-    prompt: `write a SHORT (less than 5 words) SINGLE LINE in description, mentioning keywords based on the following spoken transcript: '${req.body.currentTextChunk}'`,
-  });
+  let completion = null;
+  try {
+    completion = await openai.createCompletion({
+      max_tokens: 3040,
+      model: "text-davinci-003",
+      prompt: `write a SHORT (less than 5 words) SINGLE LINE in description, mentioning keywords based on the following spoken transcript: '${req.body.currentTextChunk}'`,
+    });
+  } catch (e) {
+    console.log(JSON.stringify(e.response.data.error), "e");
+  }
 
   //Decrease credit
   await client.send(
