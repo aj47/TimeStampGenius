@@ -79,7 +79,7 @@ const NavBar = (props) => {
   useEffect(() => {
     if (props.status === "authenticated") 
       updateCredits();
-  }, []);
+  }, [props.status]);
 
   const popupCenter = (url, title) => {
     const dualScreenLeft = window.screenLeft ?? window.screenX;
