@@ -25,10 +25,11 @@ plugins:
 functions:
   api:
     handler: index.handler
+    environment: ${file(env.json)}
     events:
       - http:
           path: /
-          method: get
+          method: post
           cors: true
 
 resources:

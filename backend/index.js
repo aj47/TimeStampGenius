@@ -1,31 +1,98 @@
-const { DynamoDBClient, PutItemCommand } = require("@aws-sdk/client-dynamodb");
+const {
+  DynamoDBClient,
+  PutItemCommand,
+  GetItemCommand,
+} = require("@aws-sdk/client-dynamodb");
+const { Configuration, OpenAIApi } = require("openai");
 const client = new DynamoDBClient({});
+const configuration = new Configuration({
+  apiKey: process.env.OPENAI_KEY,
+});
+const openai = new OpenAIApi(configuration);
 
 module.exports.handler = async (event) => {
   try {
-    console.log(event, "event");
+    // console.log(event, "event");
+    let callCount = 1;
+
+    // 1. Check if IP exists in db
     const clientIP = event.requestContext.identity.sourceIp;
-    console.log(clientIP, "clientIP");
-    // what happens when we try add the same PK twice?
-    const command = new PutItemCommand({
+    // console.log(clientIP, "clientIP");
+    const getCommand = new GetItemCommand({
       TableName: process.env.DB,
-      // For more information about data types,
-      // see https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.NamingRulesDataTypes.html#HowItWorks.DataTypes and
-      // https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Programming.LowLevelAPI.html#Programming.LowLevelAPI.DataTypeDescriptors
-      Item: {
+      Key: {
         PK: { S: clientIP },
-        SK: { S: (Math.floor(new Date().getTime() / 1000) + 360).toString() },
-        ttl: { N: (Math.floor(new Date().getTime() / 1000) + 360).toString() },
+        SK: { S: clientIP },
       },
     });
-    const response = await client.send(command);
-    console.log(response, "response");
+    const getResponse = await client.send(getCommand);
+    console.log(getResponse, "getResponse");
+    if (getResponse.Item) {
+      callCount = getResponse.Item.count.N * 1;
+      console.log(typeof callCount, "typeof callCount");
+      // If it exists, increase the count in the database
+      const updateCommand = new PutItemCommand({
+        TableName: process.env.DB,
+        Item: {
+          PK: { S: clientIP },
+          SK: { S: clientIP },
+          ttl: {
+            N: (Math.floor(new Date().getTime() / 1000) + 60 * 60).toString(),
+          },
+          count: { N: (callCount + 1).toString() },
+        },
+      });
+      const updateResponse = await client.send(updateCommand);
+      console.log(updateResponse, "updateResponse");
+    } else {
+      //If it doesn't exist, create a new record in the database
+      const putCommand = new PutItemCommand({
+        TableName: process.env.DB,
+        Item: {
+          PK: { S: clientIP },
+          SK: { S: clientIP },
+          ttl: {
+            N: (Math.floor(new Date().getTime() / 1000) + 60 * 60).toString(),
+          },
+          count: { N: "1" },
+        },
+      });
+      const putResponse = await client.send(putCommand);
+    }
+    // 2. Don't let IP make LLM call if they've already done 5 timestamps
+    if (callCount > 5) {
+      return {
+        statusCode: 200,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Credentials": true,
+        },
+        body: JSON.stringify(
+          {
+            error: "This IP has reached the maximum number of calls",
+          },
+          null,
+          2
+        ),
+      };
+    }
+    // Perform LLM call
+    const completion = await openai.createCompletion({
+      max_tokens: 3040,
+      model: "text-davinci-003",
+      prompt: `write a SHORT (less than 5 words) SINGLE LINE in description, mentioning keywords based on the following spoken transcript: '${
+        JSON.parse(event.body).currentTextChunk
+      }'`,
+    });
     return {
       statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true,
+      },
       body: JSON.stringify(
         {
-          message: "Go Serverless v3.0! Your function executed successfully!",
-          input: event,
+          completionText: completion.data.choices[0].text,
         },
         null,
         2
