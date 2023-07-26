@@ -69,7 +69,9 @@ module.exports.handler = async (event) => {
         },
         body: JSON.stringify(
           {
-            error: "This IP has reached the maximum number of calls",
+            error:
+              "This IP has reached the maximum number of timestamps. Please log in to generate more",
+            errorType: "MaxIP",
           },
           null,
           2

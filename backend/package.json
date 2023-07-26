@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.370.0",
+    "openai": "^3.3.0",
     "serverless-offline": "^12.0.4"
   }
 }

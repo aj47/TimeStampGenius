@@ -96,26 +96,39 @@ const Dashboard = (props) => {
               }),
             }).then((res) => res.json());
           } else {
-            completionResult = await fetch("/api/generateFreeTimestampFromChrome", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                currentTextChunk,
-              }),
-            }).then((res) => res.json());
+            completionResult = await fetch(
+              "https://m697d8eoq5.execute-api.us-east-1.amazonaws.com/dev/",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  currentTextChunk,
+                }),
+              }
+            ).then((res) => res.json());
           }
         }
         if (!completionResult.error && !completionResult.completionText) {
           onSubmitVideoId(url);
-        }
-        if (completionResult.error) {
-          setProcessingVideo(false);
-          setResultingTimestamps((resultingTimestamps) => [
-            ...resultingTimestamps,
-            "-- Insufficient credits to generate more timestamps --",
-          ]);
+        } else if (completionResult.error) {
+          // setProcessingVideo(false);
+          if (
+            completionResult.errorType &&
+            completionResult.errorType === "MaxIP"
+          ) {
+            // prompt user to log in to get more credit
+            setResultingTimestamps((resultingTimestamps) => [
+              ...resultingTimestamps,
+              `-- ${completionResult.error} --`,
+            ]);
+          } else {
+            setResultingTimestamps((resultingTimestamps) => [
+              ...resultingTimestamps,
+              "-- Insufficient credits to generate more timestamps --",
+            ]);
+          }
           return;
         }
         // convert chunkStartTime from ms to hh:mm:ss string
