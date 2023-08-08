@@ -60,7 +60,7 @@ module.exports.handler = async (event) => {
       const putResponse = await client.send(putCommand);
     }
     // 2. Don't let IP make LLM call if they've already done 5 timestamps
-    if (callCount > 5) {
+    if (callCount > 70) {
       return {
         statusCode: 200,
         headers: {
