@@ -12,12 +12,10 @@ const openai = new OpenAIApi(configuration);
 
 module.exports.handler = async (event) => {
   try {
-    // console.log(event, "event");
     let callCount = 1;
 
     // 1. Check if IP exists in db
     const clientIP = event.requestContext.identity.sourceIp;
-    // console.log(clientIP, "clientIP");
     const getCommand = new GetItemCommand({
       TableName: process.env.DB,
       Key: {
@@ -26,10 +24,8 @@ module.exports.handler = async (event) => {
       },
     });
     const getResponse = await client.send(getCommand);
-    console.log(getResponse, "getResponse");
     if (getResponse.Item) {
       callCount = getResponse.Item.count.N * 1;
-      console.log(typeof callCount, "typeof callCount");
       // If it exists, increase the count in the database
       const updateCommand = new PutItemCommand({
         TableName: process.env.DB,
@@ -43,7 +39,6 @@ module.exports.handler = async (event) => {
         },
       });
       const updateResponse = await client.send(updateCommand);
-      console.log(updateResponse, "updateResponse");
     } else {
       //If it doesn't exist, create a new record in the database
       const putCommand = new PutItemCommand({
@@ -79,12 +74,24 @@ module.exports.handler = async (event) => {
       };
     }
     // Perform LLM call
-    const completion = await openai.createCompletion({
-      max_tokens: 3040,
-      model: "text-davinci-003",
-      prompt: `write a SHORT (less than 5 words) SINGLE LINE in description, mentioning keywords based on the following spoken transcript: '${
-        JSON.parse(event.body).currentTextChunk
-      }'`,
+    completion = await openai.createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "system",
+          content:
+            "given a chunk from a video transcript. you will then have to generate LESS THAN 5 words summarizing the topics spoken about in the chunk",
+        },
+        {
+          role: "user",
+          content: `transcript: ${JSON.parse(event.body).currentTextChunk}`,
+        },
+      ],
+      temperature: 0.06,
+      max_tokens: 8,
+      top_p: 1,
+      frequency_penalty: 0,
+      presence_penalty: 0,
     });
     return {
       statusCode: 200,
@@ -94,7 +101,7 @@ module.exports.handler = async (event) => {
       },
       body: JSON.stringify(
         {
-          completionText: completion.data.choices[0].text,
+          completionText: completion.data.choices[0].message.content,
         },
         null,
         2
