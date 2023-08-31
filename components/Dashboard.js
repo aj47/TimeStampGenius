@@ -71,7 +71,7 @@ const Dashboard = (props) => {
       if (chunkStartTime === 0) chunkStartTime = currentLine.offset;
       currentTextChunk = currentTextChunk + " " + currentLine.text;
       // if the current text chunk exceeds 3500 words print the chunk and reset chunk to blank
-      if (currentTextChunk.split(" ").length > 450) {
+      if (currentTextChunk.split(" ").length > 350) {
         let completionResult = null;
         if (props.freeTrial) {
           completionResult = await fetch("/api/generateFreeTimestamp", {
