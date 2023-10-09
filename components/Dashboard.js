@@ -121,7 +121,7 @@ const Dashboard = (props) => {
       }
       currentTextChunk = currentTextChunk + " " + currentLine.text;
       // if the current text chunk exceeds 3500 words print the chunk and reset chunk to blank
-      if (currentTextChunk.split(" ").length > 3500) {
+      if (currentTextChunk.split(" ").length > 1000) {
         let completionResult = await generateTimestampCompletion(
           currentTextChunk
         );
