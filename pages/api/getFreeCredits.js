@@ -17,11 +17,5 @@ export default async function handler(req, res) {
       },
     })
   );
-  logger.info({
-    user: {
-      email: req.body.user
-    },
-    event: { type: "request", tag: "api" },
-  });
   res.status(200).json({ credits: parseInt(Item.credit.N) });
 }

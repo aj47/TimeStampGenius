@@ -4,7 +4,6 @@ import {
   GetItemCommand,
   UpdateItemCommand,
 } from "@aws-sdk/client-dynamodb";
-const logger = require("pino")();
 const client = new DynamoDBClient({});
 const { Configuration, OpenAIApi } = require("openai");
 
@@ -52,16 +51,6 @@ async function handler(req, res) {
       presence_penalty: 0,
     });
 
-  logger.info({
-    user: {
-      email: "CHROME",
-    },
-    transcript: {
-      text: req.body.currentTextChunk,
-      completion: completion.data.choices[0].message.content,
-    },
-    event: { type: "request", tag: "api" },
-  });
   res.status(200).json({ completionText: completion.data.choices[0].message.content });
 }
 
