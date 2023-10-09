@@ -31,26 +31,31 @@ export default async function handler(req, res) {
     return;
   }
 
-  //Perform LLM call
-  completion = await openai.createChatCompletion({
-    model: "gpt-3.5-turbo",
-    messages: [
-      {
-        role: "system",
-        content:
-          "given a chunk from a video transcript. you will then have to generate LESS THAN 5 words summarizing the topics spoken about in the chunk",
-      },
-      {
-        role: "user",
-        content: `transcript: ${req.body.currentTextChunk}`,
-      },
-    ],
-    temperature: 0.06,
-    max_tokens: 8,
-    top_p: 1,
-    frequency_penalty: 0,
-    presence_penalty: 0,
-  });
+  try {
+    //Perform LLM call
+    completion = await openai.createChatCompletion({
+      model: "gpt-3.5-turbo-16k",
+      messages: [
+        {
+          role: "system",
+          content:
+            "given a chunk from a video transcript. you will then have to generate LESS THAN 5 words summarizing the topics spoken about in the chunk",
+        },
+        {
+          role: "user",
+          content: `transcript: ${req.body.currentTextChunk}`,
+        },
+      ],
+      temperature: 0.06,
+      max_tokens: 8,
+      top_p: 1,
+      frequency_penalty: 0,
+      presence_penalty: 0,
+    });
+  } catch (e) {
+    console.log(JSON.stringify(e), "e");
+    res.status(500);
+  }
 
   //Decrease credit
   await client.send(
@@ -66,5 +71,5 @@ export default async function handler(req, res) {
       ReturnValues: "UPDATED_NEW",
     })
   );
-  res.status(200).json({completionText: completion.data.choices[0].text });
+  res.status(200).json({ completionText: completion.data.choices[0].text });
 }

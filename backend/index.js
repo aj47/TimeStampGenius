@@ -75,7 +75,7 @@ module.exports.handler = async (event) => {
     }
     // Perform LLM call
     completion = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo",
+      model: "gpt-3.5-turbo-16k",
       messages: [
         {
           role: "system",
@@ -93,6 +93,7 @@ module.exports.handler = async (event) => {
       frequency_penalty: 0,
       presence_penalty: 0,
     });
+
     return {
       statusCode: 200,
       headers: {
@@ -109,5 +110,12 @@ module.exports.handler = async (event) => {
     };
   } catch (e) {
     console.error(e);
+    return {
+      statusCode: 500,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true,
+      },
+    };
   }
 };
