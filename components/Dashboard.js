@@ -39,32 +39,21 @@ const Dashboard = (props) => {
   };
 
   const generateTimestampCompletion = async (currentTextChunk) => {
-    if (props.freeTrial) {
-      return await fetch("/api/generateFreeTimestamp", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          user: props.freeTrial,
-          currentTextChunk,
-        }),
-      }).then((res) => res.json());
-    } else {
-      if (status === "authenticated") {
-        return await fetch("/api/generateTimestamp", {
+    try {
+      if (props.freeTrial) {
+        return await fetch("/api/generateFreeTimestamp", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
+            user: props.freeTrial,
             currentTextChunk,
           }),
         }).then((res) => res.json());
       } else {
-        return await fetch(
-          "https://m697d8eoq5.execute-api.us-east-1.amazonaws.com/dev/",
-          {
+        if (status === "authenticated") {
+          return await fetch("/api/generateTimestamp", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -72,9 +61,25 @@ const Dashboard = (props) => {
             body: JSON.stringify({
               currentTextChunk,
             }),
-          }
-        ).then((res) => res.json());
+          }).then((res) => res.json());
+        } else {
+          return await fetch(
+            "https://m697d8eoq5.execute-api.us-east-1.amazonaws.com/dev/",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                currentTextChunk,
+              }),
+            }
+          ).then((res) => res.json());
+        }
       }
+    } catch (e) {
+      console.log(e, "e");
+      return "error";
     }
   };
 
@@ -107,12 +112,34 @@ const Dashboard = (props) => {
     let currentTextChunk = "";
     let chunkSummaries = "";
     let chunkStartTime = 0;
+    let pendingTextChunk = ""; //This is used when we break context window on previous run
     for (const currentLine of transcriptionResult.transcript) {
       if (chunkStartTime === 0) chunkStartTime = currentLine.offset;
+      if (pendingTextChunk.length > 0) {
+        currentTextChunk = currentTextChunk + " " + pendingTextChunk;
+        pendingTextChunk = "";
+      }
       currentTextChunk = currentTextChunk + " " + currentLine.text;
       // if the current text chunk exceeds 3500 words print the chunk and reset chunk to blank
-      if (currentTextChunk.split(" ").length > 1000) {
-        let completionResult = await generateTimestampCompletion(currentTextChunk);
+      if (currentTextChunk.split(" ").length > 3500) {
+        let completionResult = await generateTimestampCompletion(
+          currentTextChunk
+        );
+        console.log(completionResult, "completionResult");
+        //if error, try again with smaller context
+        if (completionResult === "error") {
+          const firstHalfCurrentChunk = currentTextChunk.slice(
+            0,
+            Math.floor(currentTextChunk.length / 2)
+          );
+          pendingTextChunk = currentTextChunk.slice(
+            Math.floor(currentTextChunk.length / 2),
+            currentTextChunk.length
+          );
+          completionResult = await generateTimestampCompletion(
+            firstHalfCurrentChunk
+          );
+        }
         if (!completionResult.error && !completionResult.completionText) {
           onSubmitVideoId(url);
         } else if (completionResult.error) {

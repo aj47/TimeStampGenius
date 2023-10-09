@@ -6,7 +6,6 @@ import {
   GetItemCommand,
   UpdateItemCommand,
 } from "@aws-sdk/client-dynamodb";
-const logger = require("pino")();
 const client = new DynamoDBClient({});
 const { Configuration, OpenAIApi } = require("openai");
 
@@ -41,7 +40,7 @@ export default async function handler(req, res) {
   let completion = null;
   try {
     completion = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo",
+      model: "gpt-3.5-turbo-16k",
       messages: [
         {
           role: "system",
@@ -54,13 +53,12 @@ export default async function handler(req, res) {
         },
       ],
       temperature: 0.06,
-      max_tokens: 8,
-      top_p: 1,
-      frequency_penalty: 0,
-      presence_penalty: 0,
+      max_tokens: 12,
     });
+    console.log(completion, "completion");
   } catch (e) {
     console.log(JSON.stringify(e), "e");
+    res.status(500);
   }
 
   //Decrease credit
@@ -77,16 +75,6 @@ export default async function handler(req, res) {
       ReturnValues: "UPDATED_NEW",
     })
   );
-  logger.info({
-    user: {
-      email: session?.user?.email,
-    },
-    transcript: {
-      text: req.body.currentTextChunk,
-      completion: completion.data.choices[0].message.content,
-    },
-    event: { type: "request", tag: "api" },
-  });
   res
     .status(200)
     .json({ completionText: completion.data.choices[0].message.content });
