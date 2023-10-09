@@ -38,6 +38,46 @@ const Dashboard = (props) => {
     }
   };
 
+  const generateTimestampCompletion = async (currentTextChunk) => {
+    if (props.freeTrial) {
+      return await fetch("/api/generateFreeTimestamp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user: props.freeTrial,
+          currentTextChunk,
+        }),
+      }).then((res) => res.json());
+    } else {
+      if (status === "authenticated") {
+        return await fetch("/api/generateTimestamp", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            currentTextChunk,
+          }),
+        }).then((res) => res.json());
+      } else {
+        return await fetch(
+          "https://m697d8eoq5.execute-api.us-east-1.amazonaws.com/dev/",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              currentTextChunk,
+            }),
+          }
+        ).then((res) => res.json());
+      }
+    }
+  };
+
   const onSubmitVideoId = async (url) => {
     setProcessingVideo(true);
     const videoId = extractVideoId(url);
@@ -62,7 +102,7 @@ const Dashboard = (props) => {
       setProcessingVideo(false);
       return;
     }
-    setResultingTimestamps(["00:00:00 -   Intro"]);
+    setResultingTimestamps(["00:00:00 - Intro"]);
     // Loop through transcript
     let currentTextChunk = "";
     let chunkSummaries = "";
@@ -71,45 +111,8 @@ const Dashboard = (props) => {
       if (chunkStartTime === 0) chunkStartTime = currentLine.offset;
       currentTextChunk = currentTextChunk + " " + currentLine.text;
       // if the current text chunk exceeds 3500 words print the chunk and reset chunk to blank
-      if (currentTextChunk.split(" ").length > 350) {
-        let completionResult = null;
-        if (props.freeTrial) {
-          completionResult = await fetch("/api/generateFreeTimestamp", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              user: props.freeTrial,
-              currentTextChunk,
-            }),
-          }).then((res) => res.json());
-        } else {
-          if (status === "authenticated") {
-            completionResult = await fetch("/api/generateTimestamp", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                currentTextChunk,
-              }),
-            }).then((res) => res.json());
-          } else {
-            completionResult = await fetch(
-              "https://m697d8eoq5.execute-api.us-east-1.amazonaws.com/dev/",
-              {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  currentTextChunk,
-                }),
-              }
-            ).then((res) => res.json());
-          }
-        }
+      if (currentTextChunk.split(" ").length > 1000) {
+        let completionResult = await generateTimestampCompletion(currentTextChunk);
         if (!completionResult.error && !completionResult.completionText) {
           onSubmitVideoId(url);
         } else if (completionResult.error) {
