@@ -125,7 +125,6 @@ const Dashboard = (props) => {
         let completionResult = await generateTimestampCompletion(
           currentTextChunk
         );
-        console.log(completionResult, "completionResult");
         //if error, try again with smaller context
         if (completionResult === "error") {
           const firstHalfCurrentChunk = currentTextChunk.slice(
@@ -161,8 +160,13 @@ const Dashboard = (props) => {
           }
           return;
         }
+        //Make sure only a max of 3 comma separated topics are rendered and don't include "topics:"
+        const completionText = completionResult.completionText
+          .split(",")
+          .slice(0, 3)
+          .join(",")
+          .replaceAll("topics:", "");
         // convert chunkStartTime from ms to hh:mm:ss string
-        const completionText = completionResult.completionText;
         const timeStampString = new Date(chunkStartTime)
           .toISOString()
           .slice(11, 19);

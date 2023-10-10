@@ -39,7 +39,7 @@ export default async function handler(req, res) {
         {
           role: "system",
           content:
-            "given a chunk from a video transcript. you will then have to generate LESS THAN 5 words summarizing the topics spoken about in the chunk",
+            "given a chunk from a video transcript. generate LESS THAN 5 words summarizing the topics spoken about in the chunk",
         },
         {
           role: "user",
@@ -47,7 +47,7 @@ export default async function handler(req, res) {
         },
       ],
       temperature: 0.06,
-      max_tokens: 8,
+      max_tokens: 20,
       top_p: 1,
       frequency_penalty: 0,
       presence_penalty: 0,
