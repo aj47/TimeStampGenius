@@ -40,7 +40,7 @@ export default async function handler(req, res) {
   let completion = null;
   try {
     completion = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo-16k",
+      model: "gpt-3.5-turbo-1106",
       messages: [
         {
           role: "system",
@@ -55,7 +55,6 @@ export default async function handler(req, res) {
       temperature: 0.06,
       max_tokens: 20,
     });
-    console.log(completion, "completion");
   } catch (e) {
     console.log(JSON.stringify(e), "e");
     res.status(500);

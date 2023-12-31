@@ -75,7 +75,7 @@ module.exports.handler = async (event) => {
     }
     // Perform LLM call
     completion = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo-16k",
+      model: "gpt-3.5-turbo-1106",
       messages: [
         {
           role: "system",

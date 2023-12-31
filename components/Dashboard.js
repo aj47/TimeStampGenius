@@ -83,11 +83,21 @@ const Dashboard = (props) => {
     }
   };
 
-  const onSubmitVideoId = async (url) => {
-    setProcessingVideo(true);
-    const videoId = extractVideoId(url);
+  const cleanTimestamp = (textToClean) => {
+    // max of 3 comma separated topics
+    // don't include "topics:"
+    return textToClean
+      .split(",")
+      .slice(0, 3)
+      .join(",")
+      .replaceAll("Topics:", "")
+      .replaceAll("topics:", "");
+  };
+
+  //Gets text transcription of youtube video
+  const getTranscription = async (videoId) => {
     let hasTranscript = true;
-    const transcriptionResult = await fetch("/api/getTranscription", {
+    const result = await fetch("/api/getTranscription", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -95,22 +105,24 @@ const Dashboard = (props) => {
       body: JSON.stringify({
         id: videoId,
       }),
-    })
-      .then((res) => res.json())
-      .catch((e) => {
-        hasTranscript = false;
-      });
+    }).catch((e) => {
+      hasTranscript = false;
+    });
     if (!hasTranscript) {
       setResultingTimestamps([
         "ERROR: - Selected Youtube video has transcripts disabled",
       ]);
       setProcessingVideo(false);
       return;
+    } else {
+      return result.json();
     }
+  };
+
+  const processTranscript = async (transcriptionResult) => {
     setResultingTimestamps(["00:00:00 - Intro"]);
     // Loop through transcript
     let currentTextChunk = "";
-    let chunkSummaries = "";
     let chunkStartTime = 0;
     let pendingTextChunk = ""; //This is used when we break context window on previous run
     for (const currentLine of transcriptionResult.transcript) {
@@ -140,7 +152,8 @@ const Dashboard = (props) => {
           );
         }
         if (!completionResult.error && !completionResult.completionText) {
-          onSubmitVideoId(url);
+          //Retry if stall
+          processTranscript(transcriptionResult);
         } else if (completionResult.error) {
           // setProcessingVideo(false);
           if (
@@ -160,18 +173,11 @@ const Dashboard = (props) => {
           }
           return;
         }
-        //Make sure only a max of 3 comma separated topics are rendered and don't include "topics:"
-        const completionText = completionResult.completionText
-          .split(",")
-          .slice(0, 3)
-          .join(",")
-          .replaceAll("topics:", "");
+        const completionText = cleanTimestamp(completionResult.completionText);
         // convert chunkStartTime from ms to hh:mm:ss string
         const timeStampString = new Date(chunkStartTime)
           .toISOString()
           .slice(11, 19);
-        chunkSummaries =
-          chunkSummaries + "\n " + timeStampString + " " + completionText;
         const polishedTimeStamp = (
           timeStampString +
           " - " +
@@ -193,6 +199,14 @@ const Dashboard = (props) => {
       }
     }
   };
+
+  const onSubmitVideoId = async (url) => {
+    setProcessingVideo(true);
+    const videoId = extractVideoId(url);
+    const transcriptionResult = await getTranscription(videoId);
+    await processTranscript(transcriptionResult);
+  };
+
   return (
     <div className="dashboard">
       <NavBar
