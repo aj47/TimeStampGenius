@@ -40,6 +40,15 @@ const Dashboard = (props) => {
 
   const generateTimestampCompletion = async (currentTextChunk) => {
     try {
+      return await fetch("/api/generateEmbedding", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          inputArray: currentTextChunk,
+        }),
+      }).then((res) => res.json());
       if (props.freeTrial) {
         return await fetch("/api/generateFreeTimestamp", {
           method: "POST",
@@ -126,17 +135,67 @@ const Dashboard = (props) => {
     let chunkStartTime = 0;
     let pendingTextChunk = ""; //This is used when we break context window on previous run
     for (const currentLine of transcriptionResult.transcript) {
-      if (chunkStartTime === 0) chunkStartTime = currentLine.offset;
-      if (pendingTextChunk.length > 0) {
-        currentTextChunk = currentTextChunk + " " + pendingTextChunk;
-        pendingTextChunk = "";
-      }
-      currentTextChunk = currentTextChunk + " " + currentLine.text;
-      // if the current text chunk exceeds 3500 words print the chunk and reset chunk to blank
-      if (currentTextChunk.split(" ").length > 1000) {
-        let completionResult = await generateTimestampCompletion(
-          currentTextChunk
+      // if (chunkStartTime === 0) chunkStartTime = currentLine.offset;
+      // if (pendingTextChunk.length > 0) {
+      //   currentTextChunk = currentTextChunk + " " + pendingTextChunk;
+      //   pendingTextChunk = "";
+      // }
+      // currentTextChunk = currentTextChunk + " " + currentLine.text;
+      // // if the current text chunk exceeds 3500 words print the chunk and reset chunk to blank
+      // if (currentTextChunk.split(" ").length > 1000) {
+      if (true) {
+        const stringArray = transcriptionResult.transcript.map(
+          (obj) => obj.text
         );
+        let completionResult = await generateTimestampCompletion(
+          stringArray.slice(0, 10)
+        );
+        console.log(completionResult, "completionResult");
+        const dotProduct = (vecA, vecB) => {
+          return vecA.reduce((sum, val, idx) => sum + val * vecB[idx], 0);
+        };
+
+        const magnitude = (vec) => {
+          return Math.sqrt(vec.reduce((sum, val) => sum + val * val, 0));
+        };
+
+        const cosineSimilarity = (vecA, vecB) => {
+          return dotProduct(vecA, vecB) / (magnitude(vecA) * magnitude(vecB));
+        };
+
+        const vectorSubtract = (vecA, vecB) => {
+          return vecA.map((val, idx) => val - vecB[idx]);
+        };
+
+        const analyzeTrainOfThought = (embedding1, embedding2) => {
+          // Compute cosine similarity
+          const similarity = cosineSimilarity(embedding1, embedding2);
+
+          // Compute the direction of change
+          const directionChange = vectorSubtract(embedding2, embedding1);
+
+          // Custom logic for determining train of thought
+          const threshold = 0.5; // Similarity threshold
+          const directionMagnitude = magnitude(directionChange);
+          const directionThreshold = 0.9; // Direction change threshold
+          console.log(similarity, "similarity");
+          console.log(directionMagnitude, "directionMagnitude");
+          return similarity > threshold &&
+            directionMagnitude < directionThreshold
+            ? "Train of thought is likely maintained"
+            : "Train of thought may have diverged";
+        };
+        const allEmbeddings = completionResult.completionText.data;
+        let lastEmbedding = allEmbeddings[0];
+        for (const embedding of allEmbeddings) {
+          if (lastEmbedding === embedding) continue;
+          console.log(
+            analyzeTrainOfThought(lastEmbedding.embedding, embedding.embedding)
+          );
+          if (allEmbeddings.indexOf(embedding) === allEmbeddings.length) break;
+          else lastEmbedding = embedding;
+        }
+        return;
         //if error, try again with smaller context
         if (completionResult === "error") {
           const firstHalfCurrentChunk = currentTextChunk.slice(
