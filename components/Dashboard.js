@@ -222,7 +222,8 @@ const Dashboard = (props) => {
           AI!
         </h1>
       </div>
-      {processingVideo ? (
+        <h3> {`Currently down due to npm package youtube-transcript broken :(`}</h3>
+      {/* {processingVideo ? (
         <button
           style={{
             fontSize: "0.8rem",
@@ -273,7 +274,7 @@ const Dashboard = (props) => {
             )}
           </>
         )}
-      </>
+      </> */}
     </div>
   );
 };
