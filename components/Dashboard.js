@@ -38,22 +38,49 @@ const Dashboard = (props) => {
     }
   };
 
-  const generateTimestampCompletion = async (currentTextChunk) => {
-    try {
-      if (props.freeTrial) {
-        return await fetch("/api/generateFreeTimestamp", {
+/**
+ * Generates a timestamp completion for a given text chunk.
+ *
+ * This function makes a POST request to either the "/api/generateFreeTimestamp" endpoint
+ * (if the user is on a free trial) or the "/api/generateTimestamp" endpoint (if the user is authenticated).
+ * If the user is not authenticated, it makes a POST request to an external API.
+ * The request body contains the current text chunk to be processed.
+ *
+ * @param {string} currentTextChunk The text chunk to be processed
+ * @returns {object} The response from the API, or "error" if an error occurs
+ */
+const generateTimestampCompletion = async (currentTextChunk) => {
+  try {
+    if (props.freeTrial) {
+      const response = await fetch("/api/generateFreeTimestamp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user: props.freeTrial,
+          currentTextChunk,
+        }),
+      });
+      const result = await response.json();
+      return result;
+    } else {
+      if (status === "authenticated") {
+        const response = await fetch("/api/generateTimestamp", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            user: props.freeTrial,
             currentTextChunk,
           }),
-        }).then((res) => res.json());
+        });
+        const result = await response.json();
+        return result;
       } else {
-        if (status === "authenticated") {
-          return await fetch("/api/generateTimestamp", {
+        const response = await fetch(
+          "https://m697d8eoq5.execute-api.us-east-1.amazonaws.com/dev/",
+          {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -61,28 +88,24 @@ const Dashboard = (props) => {
             body: JSON.stringify({
               currentTextChunk,
             }),
-          }).then((res) => res.json());
-        } else {
-          return await fetch(
-            "https://m697d8eoq5.execute-api.us-east-1.amazonaws.com/dev/",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                currentTextChunk,
-              }),
-            }
-          ).then((res) => res.json());
-        }
+          }
+        );
+        const result = await response.json();
+        return result;
       }
-    } catch (e) {
-      console.log(e, "e");
-      return "error";
     }
-  };
+  } catch (e) {
+    console.log(e, "e");
+    return "error";
+  }
+};
 
+  /**
+   * Cleans a string by removing extra topics and the "Topics:" prefix.
+   *
+   * @param {string} textToClean - The string to clean
+   * @returns {string} The cleaned string with a maximum of 3 comma-separated topics
+   */
   const cleanTimestamp = (textToClean) => {
     // max of 3 comma separated topics
     // don't include "topics:"
