@@ -126,7 +126,7 @@ const Dashboard = (props) => {
     let chunkStartTime = 0;
     let pendingTextChunk = ""; //This is used when we break context window on previous run
     for (const currentLine of transcriptionResult.transcript) {
-      if (chunkStartTime === 0) chunkStartTime = currentLine.offset;
+      if (chunkStartTime === 0) chunkStartTime = currentLine.offset * 100; //to get offset in seconds
       if (pendingTextChunk.length > 0) {
         currentTextChunk = currentTextChunk + " " + pendingTextChunk;
         pendingTextChunk = "";
@@ -222,8 +222,7 @@ const Dashboard = (props) => {
           AI!
         </h1>
       </div>
-        <h3> {`Currently down due to npm package youtube-transcript broken :(`}</h3>
-      {/* {processingVideo ? (
+      {processingVideo ? (
         <button
           style={{
             fontSize: "0.8rem",
@@ -274,7 +273,7 @@ const Dashboard = (props) => {
             )}
           </>
         )}
-      </> */}
+      </>
     </div>
   );
 };
