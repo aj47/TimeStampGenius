@@ -126,7 +126,7 @@ const Dashboard = (props) => {
     let chunkStartTime = 0;
     let pendingTextChunk = ""; //This is used when we break context window on previous run
     for (const currentLine of transcriptionResult.transcript) {
-      if (chunkStartTime === 0) chunkStartTime = currentLine.offset * 100; //to get offset in seconds
+      if (chunkStartTime === 0) chunkStartTime = currentLine.offset * 1000; //to get offset in seconds
       if (pendingTextChunk.length > 0) {
         currentTextChunk = currentTextChunk + " " + pendingTextChunk;
         pendingTextChunk = "";
