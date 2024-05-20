@@ -67,6 +67,8 @@
   margin: 5px;
 }
 .timestamps textarea {
+  padding: 10px;
+  line-height: 1.2rem;
   width: 100%;
 }
 
