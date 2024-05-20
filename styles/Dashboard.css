@@ -69,13 +69,15 @@
 
 .timestamps textarea {
   width: 100%;
-  height: 100%;
+  height: auto; /* Remove fixed height, allow auto height */
+  max-height: calc(50vh - 220px); /* Set maximum height to 50% of view height minus some offset */
+  padding: 15px;
 }
 
 .timestamps {
-  height: calc(100vh - 220px);
-  /* max-height: 50vh;   */
-  overflow: scroll;
+  height: auto; /* Allow container to expand based on textarea height */
+  max-height: calc(50vh - 220px); /* Set the same maximum height as the textarea */
+  overflow: auto; /* Enable scrolling when content exceeds max-height */
   border: 1px solid grey;
   padding: 5px;
   border-radius: 5px;

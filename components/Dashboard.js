@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useSession, signIn } from "next-auth/react";
 import NavBar from "./NavBar";
 import YouTubeInput from "./YoutubeInput";
@@ -10,6 +10,23 @@ const Dashboard = (props) => {
   const [copySuccess, setCopySuccess] = useState(false);
   const [credits, setCredits] = useState(0);
   const textAreaRef = useRef(null);
+
+  useEffect(() => {
+    const textarea = textAreaRef.current;
+    const handleResize = () => {
+      if (!textarea) return
+      textarea.style.height = "auto";
+      textarea.style.height = `${textarea.scrollHeight}px`;
+      textarea.style.maxHeight = `${window.innerHeight * 0.5}px`;
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [resultingTimestamps]);
 
   const copyToClipboard = () => {
     const textToCopy = textAreaRef.current.value;
@@ -274,8 +291,6 @@ const generateTimestampCompletion = async (currentTextChunk) => {
                 ref={textAreaRef}
                 id="timestamp-textarea"
                 value={resultingTimestamps.join("\n")}
-                rows={4}
-                cols={50}
               />
             </div>
             {copySuccess ? (
