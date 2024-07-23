@@ -1,5 +1,6 @@
 import Dashboard from "@/components/Dashboard";
 import Head from "next/head";
+import Footer from "@/components/Footer";
 import { useEffect, useState } from "react";
 
 export default function Home() {
@@ -16,6 +17,7 @@ export default function Home() {
         <title>Timestamp Genius</title>
       </Head>
       <Dashboard />
+      <Footer />
     </>
   );
 }
