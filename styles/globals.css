@@ -318,6 +318,8 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  height: 100%;
+  width: 100%;
   padding: 20px;
 }
 
@@ -331,4 +333,82 @@ body {
   margin: 10px 0;
   padding: 15px;
   font-size: 1.2rem;
+}
+
+.settings-modal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.settings-modal .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30px;
+  width: 100%;
+}
+
+.settings-modal .setting-label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.settings-modal label {
+  font-size: 1.2rem;
+  margin-right: 8px;
+}
+
+.settings-modal .tooltip {
+  position: relative;
+  display: inline-block;
+  margin-left: 8px;
+  cursor: help;
+}
+
+.settings-modal input[type="range"] {
+  width: 80%;
+  max-width: 400px;
+  margin-bottom: 10px;
+}
+
+.settings-modal span {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.settings-modal .tooltip .tooltiptext {
+  font-size: 12px;
+  visibility: hidden;
+  width: 200px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -100px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.settings-modal .tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+.settings-modal .tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
 }

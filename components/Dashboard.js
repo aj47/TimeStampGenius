@@ -9,7 +9,12 @@ const Dashboard = (props) => {
   const [resultingTimestamps, setResultingTimestamps] = useState([]);
   const [copySuccess, setCopySuccess] = useState(false);
   const [credits, setCredits] = useState(0);
+  const [chunkSize, setChunkSize] = useState(1000);
   const textAreaRef = useRef(null);
+
+  const handleChunkSizeChange = (newSize) => {
+    setChunkSize(newSize);
+  };
 
   useEffect(() => {
     const textarea = textAreaRef.current;
@@ -172,8 +177,8 @@ const generateTimestampCompletion = async (currentTextChunk) => {
         pendingTextChunk = "";
       }
       currentTextChunk = currentTextChunk + " " + currentLine.text;
-      // if the current text chunk exceeds 3500 words print the chunk and reset chunk to blank
-      if (currentTextChunk.split(" ").length > 1000) {
+      // if the current text chunk exceeds chunkSize print the chunk and reset chunk to blank
+      if (currentTextChunk.split(" ").length > chunkSize) {
         let completionResult = await generateTimestampCompletion(
           currentTextChunk
         );
@@ -255,6 +260,7 @@ const generateTimestampCompletion = async (currentTextChunk) => {
         credits={credits}
         setCredits={setCredits}
         freeTrial={props.freeTrial}
+        onChunkSizeChange={handleChunkSizeChange}
       />
       <div className="hero-container">
         <h1 className="hero-title">
