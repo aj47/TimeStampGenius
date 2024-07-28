@@ -8,6 +8,7 @@ import { FaBars, FaTimes } from "react-icons/fa";
 const NavBar = (props) => {
   const [buyCreditsModalOpen, setBuyCreditsModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -18,11 +19,17 @@ const NavBar = (props) => {
     setIsMenuOpen(false);
   };
 
+  const openSettingsModal = () => {
+    setIsSettingsModalOpen(true);
+    setIsMenuOpen(false);
+  };
+
   const DropdownMenu = () => {
     if (!isMenuOpen) return null;
 
     return (
       <div className="dropdown-menu">
+        <button onClick={openSettingsModal}>Settings</button>
         <button onClick={handleLogout}>Logout</button>
       </div>
     );
@@ -44,29 +51,15 @@ const NavBar = (props) => {
     return (
       <div className="buy-credit-modal">
         <h1>Buy credits</h1>
-        <div>
-          <button
-            onClick={() => {
-              buyCredits(1);
-            }}
-          >
-            500 credits for $5
-          </button>
-          <button
-            onClick={() => {
-              buyCredits(2);
-            }}
-          >
-            1000 credits for $9
-          </button>
-          <button
-            onClick={() => {
-              buyCredits(3);
-            }}
-          >
-            3000 credits for $20
-          </button>
-        </div>
+        <button onClick={() => { buyCredits(1); }}>
+          500 credits for $5
+        </button>
+        <button onClick={() => { buyCredits(2); }}>
+          1000 credits for $9
+        </button>
+        <button onClick={() => { buyCredits(3); }}>
+          3000 credits for $20
+        </button>
       </div>
     );
   };
@@ -132,24 +125,28 @@ const NavBar = (props) => {
 
   return (
     <div className="navbar">
-      <div className="menu-container" style={{ marginRight: "auto", marginLeft: 0 }}>
-        <button
-          className="menu-button"
-          onClick={toggleMenu}
-          style={{
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
+      {props.status == "authenticated" ? (
+        <div
+          className="menu-container"
+          style={{ marginRight: "auto", marginLeft: 0 }}
         >
-          {isMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
-        </button>
-        <DropdownMenu />
-      </div>
-      {props.status !== "authenticated" && (
+          <button
+            className="menu-button"
+            onClick={toggleMenu}
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            {isMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+          </button>
+          <DropdownMenu />
+        </div>
+      ) : (
         <button
           style={{ marginRight: "auto", opacity: 0.5, marginLeft: 10 }}
           onClick={() => popupCenter("/google-signin", "Sample Sign In")}
@@ -175,31 +172,15 @@ const NavBar = (props) => {
         isOpen={buyCreditsModalOpen}
         onClose={() => setBuyCreditsModalOpen(false)}
       >
-        <div className="buy-credit-modal">
-          <h1>Buy credits</h1>
-          <div>
-            <button
-              onClick={() => {
-                buyCredits(1);
-              }}
-            >
-              500 credits for $5
-            </button>
-            <button
-              onClick={() => {
-                buyCredits(2);
-              }}
-            >
-              1000 credits for $9
-            </button>
-            <button
-              onClick={() => {
-                buyCredits(3);
-              }}
-            >
-              3000 credits for $20
-            </button>
-          </div>
+        <BuyCreditOptions />
+      </Modal>
+      <Modal
+        isOpen={isSettingsModalOpen}
+        onClose={() => setIsSettingsModalOpen(false)}
+      >
+        <div className="settings-modal">
+          <h1>Settings</h1>
+          {/* Add your settings content here */}
         </div>
       </Modal>
       {props.status === "authenticated" && (

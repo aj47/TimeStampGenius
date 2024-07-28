@@ -39,33 +39,6 @@
   }
 }
 
-.buy-credit-modal {
-  position: absolute;
-  padding: 15px;
-  right: 25px;
-  top: 49px;
-  border: 1px solid grey;
-  border-radius: 0 0 5px 5px;
-  background-color: rgb(54, 54, 54);
-  min-width: 250px;
-  min-height: 250px;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  justify-content: space-evenly;
-}
-.buy-credit-modal div {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-}
-
-.buy-credit-modal button {
-  padding: 10px;
-  width: 200px;
-  font-size: 1.05rem;
-  margin: 5px;
-}
 .timestamps textarea {
   padding: 10px;
   line-height: 1.2rem;
