@@ -17,7 +17,7 @@ export default function Home() {
         <title>Timestamp Genius</title>
       </Head>
       <Dashboard />
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }

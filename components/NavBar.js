@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { signIn, signOut } from "next-auth/react";
 import Image from "next/image";
 import tsgLogo from "@/public/tsg-logo-long.svg";
+import Modal from "./Modal";
 
 const NavBar = (props) => {
   const [buyCreditsModalOpen, setBuyCreditsModalOpen] = useState(false);
@@ -77,8 +78,7 @@ const NavBar = (props) => {
   };
 
   useEffect(() => {
-    if (props.status === "authenticated") 
-      updateCredits();
+    if (props.status === "authenticated") updateCredits();
   }, [props.status]);
 
   const popupCenter = (url, title) => {
@@ -140,19 +140,41 @@ const NavBar = (props) => {
         src={tsgLogo}
         alt="Timestamp Genius"
       />
-      {buyCreditsModalOpen && <BuyCreditOptions />}
+      <Modal
+        isOpen={buyCreditsModalOpen}
+        onClose={() => setBuyCreditsModalOpen(false)}
+      >
+        <div className="buy-credit-modal">
+          <h1>Buy credits</h1>
+          <div>
+            <button
+              onClick={() => {
+                buyCredits(1);
+              }}
+            >
+              500 credits for $5
+            </button>
+            <button
+              onClick={() => {
+                buyCredits(2);
+              }}
+            >
+              1000 credits for $9
+            </button>
+            <button
+              onClick={() => {
+                buyCredits(3);
+              }}
+            >
+              3000 credits for $20
+            </button>
+          </div>
+        </div>
+      </Modal>
       {props.status === "authenticated" && (
         <div style={{ display: "flex", alignItems: "center" }}>
           <>
-            {buyCreditsModalOpen ? (
-              <button
-                onClick={() => {
-                  setBuyCreditsModalOpen(false);
-                }}
-              >
-                X
-              </button>
-            ) : (
+            {!buyCreditsModalOpen && (
               <button
                 className="primary"
                 onClick={() => {
