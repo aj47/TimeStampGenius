@@ -3,9 +3,30 @@ import { signIn, signOut } from "next-auth/react";
 import Image from "next/image";
 import tsgLogo from "@/public/tsg-logo-long.svg";
 import Modal from "./Modal";
+import { FaBars, FaTimes } from "react-icons/fa";
 
 const NavBar = (props) => {
   const [buyCreditsModalOpen, setBuyCreditsModalOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleLogout = () => {
+    signOut();
+    setIsMenuOpen(false);
+  };
+
+  const DropdownMenu = () => {
+    if (!isMenuOpen) return null;
+
+    return (
+      <div className="dropdown-menu">
+        <button onClick={handleLogout}>Logout</button>
+      </div>
+    );
+  };
   const buyCredits = async (itemId) => {
     const buyCredits = await fetch("/api/buyCredits", {
       method: "POST",
@@ -111,16 +132,26 @@ const NavBar = (props) => {
 
   return (
     <div className="navbar">
-      {props.status === "authenticated" ? (
+      <div className="menu-container" style={{ marginRight: "auto", marginLeft: 0 }}>
         <button
-          style={{ marginRight: "auto", opacity: 0.5, marginLeft: 0 }}
-          onClick={() => signOut()}
+          className="menu-button"
+          onClick={toggleMenu}
+          style={{
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
         >
-          Logout
+          {isMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
         </button>
-      ) : (
+        <DropdownMenu />
+      </div>
+      {props.status !== "authenticated" && (
         <button
-          style={{ marginRight: "auto", opacity: 0.5, marginLeft: 0 }}
+          style={{ marginRight: "auto", opacity: 0.5, marginLeft: 10 }}
           onClick={() => popupCenter("/google-signin", "Sample Sign In")}
         >
           Login with Google

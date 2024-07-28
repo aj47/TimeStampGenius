@@ -205,3 +205,48 @@ body {
   bottom: 15px;
   z-index: -1;
 }
+.menu-container {
+  position: relative;
+}
+
+.menu-button {
+  padding: 10px !important; /* Decrease padding and override global button styles */
+  margin-left: -5px; /* Move further to the left */
+}
+
+.menu-button:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important; /* Add hover effect */
+  border-radius: 50%; /* Make the hover effect circular */
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #f0f0f0; /* Changed to light grey */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  min-width: 120px; /* Add a minimum width to the dropdown */
+}
+
+.dropdown-menu button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #000; /* Changed to black */
+  font-size: 1rem; /* Reset font size */
+  font-weight: normal; /* Reset font weight */
+  border-radius: 0; /* Reset border-radius */
+  margin: 0; /* Remove any margin */
+  padding-left: 10px; /* Add left padding instead of margin */
+}
+
+.dropdown-menu button:hover {
+  background-color: #e0e0e0; /* Slightly darker grey for hover effect */
+}
