@@ -40,20 +40,22 @@ export default async function handler(req, res) {
   let completion = null;
   try {
     completion = await openai.createChatCompletion({
-      model: "gpt-4o-mini",
+      model: process.env.OPENAI_MODEL,
       messages: [
         {
           role: "system",
-          content:
-            "given a chunk from a video transcript. generate LESS THAN 5 words summarizing the topics spoken about in the chunk",
+          content: process.env.OPENAI_SYSTEM_PROMPT,
         },
         {
           role: "user",
-          content: `transcript: ${req.body.currentTextChunk}`,
+          content: `${process.env.OPENAI_USER_PROMPT}${req.body.currentTextChunk}`,
         },
       ],
-      temperature: 0.06,
-      max_tokens: 20,
+      temperature: parseFloat(process.env.OPENAI_TEMPERATURE),
+      max_tokens: parseInt(process.env.OPENAI_MAX_TOKENS),
+      top_p: parseFloat(process.env.OPENAI_TOP_P),
+      frequency_penalty: parseFloat(process.env.OPENAI_FREQUENCY_PENALTY),
+      presence_penalty: parseFloat(process.env.OPENAI_PRESENCE_PENALTY),
     });
   } catch (e) {
     console.log(JSON.stringify(e), "e");

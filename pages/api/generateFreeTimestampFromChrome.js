@@ -15,8 +15,6 @@ const openai = new OpenAIApi(configuration);
 const allowCors = fn => async (req, res) => {
   res.setHeader('Access-Control-Allow-Credentials', true)
   res.setHeader('Access-Control-Allow-Origin', '*')
-  // another common pattern
-  // res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT')
   res.setHeader(
     'Access-Control-Allow-Headers',
@@ -31,25 +29,24 @@ const allowCors = fn => async (req, res) => {
 
 async function handler(req, res) {
   //Perform LLM call
-    completion = await openai.createChatCompletion({
-      model: "gpt-4o-mini",
-      messages: [
-        {
-          role: "system",
-          content:
-            "given a chunk from a video transcript. you will then have to generate LESS THAN 5 words summarizing the topics spoken about in the chunk",
-        },
-        {
-          role: "user",
-          content: `transcript: ${req.body.currentTextChunk}`,
-        },
-      ],
-      temperature: 0.06,
-      max_tokens: 8,
-      top_p: 1,
-      frequency_penalty: 0,
-      presence_penalty: 0,
-    });
+  completion = await openai.createChatCompletion({
+    model: process.env.OPENAI_MODEL,
+    messages: [
+      {
+        role: "system",
+        content: process.env.OPENAI_SYSTEM_PROMPT,
+      },
+      {
+        role: "user",
+        content: `${process.env.OPENAI_USER_PROMPT}${req.body.currentTextChunk}`,
+      },
+    ],
+    temperature: parseFloat(process.env.OPENAI_TEMPERATURE),
+    max_tokens: parseInt(process.env.OPENAI_MAX_TOKENS),
+    top_p: parseFloat(process.env.OPENAI_TOP_P),
+    frequency_penalty: parseFloat(process.env.OPENAI_FREQUENCY_PENALTY),
+    presence_penalty: parseFloat(process.env.OPENAI_PRESENCE_PENALTY),
+  });
 
   res.status(200).json({ completionText: completion.data.choices[0].message.content });
 }
