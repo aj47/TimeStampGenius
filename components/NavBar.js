@@ -3,7 +3,8 @@ import { signIn, signOut } from "next-auth/react";
 import Image from "next/image";
 import tsgLogo from "@/public/tsg-logo-long.svg";
 import Modal from "./Modal";
-import { FaBars, FaTimes, FaQuestionCircle } from "react-icons/fa";
+import Settings from "./Settings";
+import { FaBars, FaTimes } from "react-icons/fa";
 
 const NavBar = (props) => {
   const [buyCreditsModalOpen, setBuyCreditsModalOpen] = useState(false);
@@ -25,8 +26,7 @@ const NavBar = (props) => {
     setIsMenuOpen(false);
   };
 
-  const handleChunkSizeChange = (e) => {
-    const newSize = parseInt(e.target.value, 10);
+  const handleChunkSizeChange = (newSize) => {
     setChunkSize(newSize);
     props.onChunkSizeChange(newSize);
   };
@@ -207,31 +207,7 @@ const NavBar = (props) => {
         isOpen={isSettingsModalOpen}
         onClose={() => setIsSettingsModalOpen(false)}
       >
-        <div className="settings-modal">
-          <h1>Settings</h1>
-          <div className="container">
-            <div className="setting-label">
-              <label htmlFor="chunkSize">Chunk Size:</label>
-              <div className="tooltip">
-                <FaQuestionCircle size={16} />
-                <span className="tooltiptext">
-                  Determines how many words in each timestamp segment. 1000
-                  words is usually about 7 minutes of time.
-                </span>
-              </div>
-            </div>
-            <input
-              type="range"
-              id="chunkSize"
-              min="300"
-              max="5000"
-              step="100"
-              value={chunkSize}
-              onChange={handleChunkSizeChange}
-            />
-            <span>{chunkSize} words</span>
-          </div>
-        </div>
+        <Settings chunkSize={chunkSize} onChunkSizeChange={handleChunkSizeChange} />
       </Modal>
       {props.status === "authenticated" && (
         <div style={{ display: "flex", alignItems: "center" }}>
