@@ -4,7 +4,7 @@ import NavBar from "./NavBar";
 import YouTubeInput from "./YoutubeInput";
 import { useGlobalStore } from "../store/GlobalStore";
 
-const Dashboard = ({ freeTrial }) => {
+const Dashboard = () => {
   const { data: session, status } = useSession();
   const { credits, setCredits, chunkSize, systemPrompt, userPrompt } = useGlobalStore();
   const [processingVideo, setProcessingVideo] = useState(false);
