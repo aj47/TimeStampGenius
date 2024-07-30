@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { signIn, signOut } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import tsgLogo from "@/public/tsg-logo-long.svg";
 import Modal from "./Modal";
 import Settings from "./Settings";
 import { FaBars, FaTimes } from "react-icons/fa";
+import { useGlobalStore } from "../store/GlobalStore";
 
-const NavBar = (props) => {
+const NavBar = ({ freeTrial }) => {
+  const { data: session, status } = useSession();
+  const { credits, setCredits, chunkSize, setChunkSize, systemPrompt, setSystemPrompt } = useGlobalStore();
   const [buyCreditsModalOpen, setBuyCreditsModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
-  const [chunkSize, setChunkSize] = useState(1000);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -28,7 +30,10 @@ const NavBar = (props) => {
 
   const handleChunkSizeChange = (newSize) => {
     setChunkSize(newSize);
-    props.onChunkSizeChange(newSize);
+  };
+
+  const handleSystemPromptChange = (newPrompt) => {
+    setSystemPrompt(newPrompt);
   };
 
   const DropdownMenu = () => {
@@ -37,7 +42,7 @@ const NavBar = (props) => {
     return (
       <div className="dropdown-menu">
         <button onClick={openSettingsModal}>Settings</button>
-        {props.status === "authenticated" ? (
+        {status === "authenticated" ? (
           <>
             <button onClick={() => setBuyCreditsModalOpen(true)}>
               Buy Credits
@@ -96,11 +101,11 @@ const NavBar = (props) => {
 
   const updateCredits = async () => {
     let response = null;
-    if (props.freeTrial) {
+    if (freeTrial) {
       response = await fetch("/api/getFreeCredits", {
         method: "POST",
         body: JSON.stringify({
-          user: props.freeTrial,
+          user: freeTrial,
         }),
         headers: {
           "Content-Type": "application/json",
@@ -118,12 +123,12 @@ const NavBar = (props) => {
         },
       }).then((res) => res.json());
     }
-    props.setCredits(response.credits);
+    setCredits(response.credits);
   };
 
   useEffect(() => {
-    if (props.status === "authenticated") updateCredits();
-  }, [props.status]);
+    if (status === "authenticated") updateCredits();
+  }, [status]);
 
   const popupCenter = (url, title) => {
     const dualScreenLeft = window.screenLeft ?? window.screenX;
@@ -175,7 +180,7 @@ const NavBar = (props) => {
         </button>
         <DropdownMenu />
       </div>
-      {props.status !== "authenticated" && (
+      {status !== "authenticated" && (
         <button
           style={{ marginLeft: "auto", opacity: 0.5 }}
           onClick={() => popupCenter("/google-signin", "Sample Sign In")}
@@ -207,20 +212,25 @@ const NavBar = (props) => {
         isOpen={isSettingsModalOpen}
         onClose={() => setIsSettingsModalOpen(false)}
       >
-        <Settings chunkSize={chunkSize} onChunkSizeChange={handleChunkSizeChange} />
+        <Settings 
+          chunkSize={chunkSize} 
+          onChunkSizeChange={handleChunkSizeChange}
+          systemPrompt={systemPrompt}
+          onSystemPromptChange={handleSystemPromptChange}
+        />
       </Modal>
-      {props.status === "authenticated" && (
+      {status === "authenticated" && (
         <div style={{ display: "flex", alignItems: "center" }}>
           <>
             {!buyCreditsModalOpen && (
               <button
                 className="primary"
                 onClick={() => {
-                  if (props.freeTrial) return;
+                  if (freeTrial) return;
                   setBuyCreditsModalOpen(true);
                 }}
               >
-                Credits: {props.credits}
+                Credits: {credits}
               </button>
             )}
           </>

@@ -1,10 +1,21 @@
 import React from "react";
 import { FaQuestionCircle } from "react-icons/fa";
+import { useGlobalStore } from "../store/GlobalStore";
 
-const Settings = ({ chunkSize, onChunkSizeChange }) => {
+const Settings = () => {
+  const { chunkSize, setChunkSize, systemPrompt, setSystemPrompt, userPrompt, setUserPrompt } = useGlobalStore();
+
   const handleChunkSizeChange = (e) => {
     const newSize = parseInt(e.target.value, 10);
-    onChunkSizeChange(newSize);
+    setChunkSize(newSize);
+  };
+
+  const handleSystemPromptChange = (e) => {
+    setSystemPrompt(e.target.value);
+  };
+
+  const handleUserPromptChange = (e) => {
+    setUserPrompt(e.target.value);
   };
 
   return (
@@ -31,6 +42,42 @@ const Settings = ({ chunkSize, onChunkSizeChange }) => {
           onChange={handleChunkSizeChange}
         />
         <span>{chunkSize} words</span>
+      </div>
+      <div className="container">
+        <div className="setting-label">
+          <label htmlFor="systemPrompt">System Prompt:</label>
+          <div className="tooltip">
+            <FaQuestionCircle size={16} />
+            <span className="tooltiptext">
+              Custom instructions for the AI. Leave blank to use default.
+            </span>
+          </div>
+        </div>
+        <textarea
+          id="systemPrompt"
+          value={systemPrompt}
+          onChange={handleSystemPromptChange}
+          placeholder="Enter custom system prompt here..."
+          rows="4"
+        />
+      </div>
+      <div className="container">
+        <div className="setting-label">
+          <label htmlFor="userPrompt">User Prompt:</label>
+          <div className="tooltip">
+            <FaQuestionCircle size={16} />
+            <span className="tooltiptext">
+              Custom user instructions for each chunk. Leave blank to use default.
+            </span>
+          </div>
+        </div>
+        <textarea
+          id="userPrompt"
+          value={userPrompt}
+          onChange={handleUserPromptChange}
+          placeholder="Enter custom user prompt here..."
+          rows="4"
+        />
       </div>
     </div>
   );

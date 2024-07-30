@@ -74,24 +74,24 @@ module.exports.handler = async (event) => {
       };
     }
     // Perform LLM call
+    const { currentTextChunk, openAISettings, systemPrompt, userPrompt } = JSON.parse(event.body);
     completion = await openai.createChatCompletion({
-      model: "gpt-4o-mini",
+      model: openAISettings.model,
       messages: [
         {
           role: "system",
-          content:
-            "given a chunk from a video transcript. generate LESS THAN 5 words summarizing the topics spoken about in the chunk",
+          content: systemPrompt || "given a chunk from a video transcript. generate LESS THAN 5 words summarizing the topics spoken about in the chunk",
         },
         {
           role: "user",
-          content: `transcript: ${JSON.parse(event.body).currentTextChunk}`,
+          content: `${userPrompt || "transcript: "}${currentTextChunk}`,
         },
       ],
-      temperature: 0.06,
-      max_tokens: 12,
-      top_p: 1,
-      frequency_penalty: 0,
-      presence_penalty: 0,
+      temperature: openAISettings.temperature,
+      max_tokens: openAISettings.max_tokens,
+      top_p: openAISettings.top_p,
+      frequency_penalty: openAISettings.frequency_penalty,
+      presence_penalty: openAISettings.presence_penalty,
     });
 
     return {
@@ -116,6 +116,7 @@ module.exports.handler = async (event) => {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Credentials": true,
       },
+      body: JSON.stringify({ error: "Internal server error" }),
     };
   }
 };

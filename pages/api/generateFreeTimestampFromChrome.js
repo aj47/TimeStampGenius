@@ -28,25 +28,33 @@ const allowCors = fn => async (req, res) => {
 }
 
 async function handler(req, res) {
+  const { currentTextChunk, openAISettings, systemPrompt, userPrompt } = req.body;
+
   //Perform LLM call
-  completion = await openai.createChatCompletion({
-    model: process.env.OPENAI_MODEL,
-    messages: [
-      {
-        role: "system",
-        content: process.env.OPENAI_SYSTEM_PROMPT,
-      },
-      {
-        role: "user",
-        content: `${process.env.OPENAI_USER_PROMPT}${req.body.currentTextChunk}`,
-      },
-    ],
-    temperature: parseFloat(process.env.OPENAI_TEMPERATURE),
-    max_tokens: parseInt(process.env.OPENAI_MAX_TOKENS),
-    top_p: parseFloat(process.env.OPENAI_TOP_P),
-    frequency_penalty: parseFloat(process.env.OPENAI_FREQUENCY_PENALTY),
-    presence_penalty: parseFloat(process.env.OPENAI_PRESENCE_PENALTY),
-  });
+  try {
+    completion = await openai.createChatCompletion({
+      model: openAISettings.model,
+      messages: [
+        {
+          role: "system",
+          content: systemPrompt || process.env.OPENAI_SYSTEM_PROMPT,
+        },
+        {
+          role: "user",
+          content: `${userPrompt || process.env.OPENAI_USER_PROMPT || ""}${currentTextChunk}`,
+        },
+      ],
+      temperature: openAISettings.temperature,
+      max_tokens: openAISettings.max_tokens,
+      top_p: openAISettings.top_p,
+      frequency_penalty: openAISettings.frequency_penalty,
+      presence_penalty: openAISettings.presence_penalty,
+    });
+  } catch (e) {
+    console.log(JSON.stringify(e), "e");
+    res.status(500).json({ error: "Error generating completion" });
+    return;
+  }
 
   res.status(200).json({ completionText: completion.data.choices[0].message.content });
 }

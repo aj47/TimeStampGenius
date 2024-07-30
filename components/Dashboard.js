@@ -2,19 +2,24 @@ import React, { useRef, useState, useEffect } from "react";
 import { useSession, signIn } from "next-auth/react";
 import NavBar from "./NavBar";
 import YouTubeInput from "./YoutubeInput";
+import { useGlobalStore } from "../store/GlobalStore";
 
-const Dashboard = (props) => {
+const Dashboard = ({ freeTrial }) => {
   const { data: session, status } = useSession();
+  const { credits, setCredits, chunkSize, systemPrompt, userPrompt } = useGlobalStore();
   const [processingVideo, setProcessingVideo] = useState(false);
   const [resultingTimestamps, setResultingTimestamps] = useState([]);
   const [copySuccess, setCopySuccess] = useState(false);
-  const [credits, setCredits] = useState(0);
-  const [chunkSize, setChunkSize] = useState(1000);
+  const [openAISettings, setOpenAISettings] = useState({
+    model: "gpt-3.5-turbo",
+    temperature: 0.7,
+    max_tokens: 100,
+    top_p: 1,
+    frequency_penalty: 0,
+    presence_penalty: 0,
+  });
   const textAreaRef = useRef(null);
 
-  const handleChunkSizeChange = (newSize) => {
-    setChunkSize(newSize);
-  };
 
   useEffect(() => {
     const textarea = textAreaRef.current;
@@ -73,15 +78,28 @@ const Dashboard = (props) => {
  */
 const generateTimestampCompletion = async (currentTextChunk) => {
   try {
-    if (props.freeTrial) {
+    const requestBody = {
+      currentTextChunk,
+      openAISettings,
+    };
+
+    if (systemPrompt) {
+      requestBody.systemPrompt = systemPrompt;
+    }
+
+    if (userPrompt) {
+      requestBody.userPrompt = userPrompt;
+    }
+
+    if (freeTrial) {
       const response = await fetch("/api/generateFreeTimestamp", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          user: props.freeTrial,
-          currentTextChunk,
+          user: freeTrial,
+          ...requestBody,
         }),
       });
       const result = await response.json();
@@ -93,9 +111,7 @@ const generateTimestampCompletion = async (currentTextChunk) => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            currentTextChunk,
-          }),
+          body: JSON.stringify(requestBody),
         });
         const result = await response.json();
         return result;
@@ -107,9 +123,7 @@ const generateTimestampCompletion = async (currentTextChunk) => {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-              currentTextChunk,
-            }),
+            body: JSON.stringify(requestBody),
           }
         );
         const result = await response.json();
@@ -254,14 +268,7 @@ const generateTimestampCompletion = async (currentTextChunk) => {
 
   return (
     <div className="dashboard">
-      <NavBar
-        session={session}
-        status={status}
-        credits={credits}
-        setCredits={setCredits}
-        freeTrial={props.freeTrial}
-        onChunkSizeChange={handleChunkSizeChange}
-      />
+      <NavBar freeTrial={freeTrial} />
       <div className="hero-container">
         <h1 className="hero-title">
           YouTube <span className="highlight">Timestamp Generation</span> with

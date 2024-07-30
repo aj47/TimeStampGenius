@@ -31,29 +31,32 @@ export default async function handler(req, res) {
     return;
   }
 
+  const { currentTextChunk, openAISettings, systemPrompt, userPrompt } = req.body;
+
   try {
     //Perform LLM call
     completion = await openai.createChatCompletion({
-      model: process.env.OPENAI_MODEL,
+      model: openAISettings.model,
       messages: [
         {
           role: "system",
-          content: process.env.OPENAI_SYSTEM_PROMPT,
+          content: systemPrompt || process.env.OPENAI_SYSTEM_PROMPT,
         },
         {
           role: "user",
-          content: `${process.env.OPENAI_USER_PROMPT}${req.body.currentTextChunk}`,
+          content: `${userPrompt || process.env.OPENAI_USER_PROMPT || ""}${currentTextChunk}`,
         },
       ],
-      temperature: parseFloat(process.env.OPENAI_TEMPERATURE),
-      max_tokens: parseInt(process.env.OPENAI_MAX_TOKENS),
-      top_p: parseFloat(process.env.OPENAI_TOP_P),
-      frequency_penalty: parseFloat(process.env.OPENAI_FREQUENCY_PENALTY),
-      presence_penalty: parseFloat(process.env.OPENAI_PRESENCE_PENALTY),
+      temperature: openAISettings.temperature,
+      max_tokens: openAISettings.max_tokens,
+      top_p: openAISettings.top_p,
+      frequency_penalty: openAISettings.frequency_penalty,
+      presence_penalty: openAISettings.presence_penalty,
     });
   } catch (e) {
     console.log(JSON.stringify(e), "e");
-    res.status(500);
+    res.status(500).json({ error: "Error generating completion" });
+    return;
   }
 
   //Decrease credit
