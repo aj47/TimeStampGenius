@@ -268,15 +268,21 @@ body {
   color: #ffffff; /* White text for better contrast */
   padding: 20px;
   border-radius: 5px;
-  min-width: 300px; /* Minimum width */
-  min-height: 400px; /* Minimum height */
   width: 90%; /* Responsive width */
   max-width: 600px; /* Maximum width */
-  height: 90%; /* Responsive height */
-  max-height: 800px; /* Maximum height */
+  max-height: 90vh; /* Maximum height */
   overflow-y: auto;
   position: relative;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-content > div {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .modal-close {
@@ -337,61 +343,101 @@ body {
 .settings-modal {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  justify-content: center;
+  align-items: stretch;
   width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  height: 100%;
 }
 
-.settings-modal .container {
+.settings-modal h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #81d6e3;
+}
+
+.settings-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  margin-top: 30px;
-  width: 100%;
+  gap: 30px;
+  overflow-y: auto;
+  max-height: 80vh;
+  padding-right: 10px;
 }
 
-.settings-modal .setting-label {
+.setting-item {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.setting-label {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
+  gap: 10px;
 }
 
-.settings-modal label {
+.setting-label label {
   font-size: 1.2rem;
-  margin-right: 8px;
+  font-weight: bold;
+  color: #fb6f93;
+}
+
+.setting-control {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.settings-modal input[type="range"] {
+  flex-grow: 1;
+  max-width: none;
+  margin-bottom: 0;
+}
+
+.settings-modal span {
+  font-size: 1rem;
+  font-weight: normal;
+  color: #81d6e3;
+  min-width: 80px;
+}
+
+.settings-modal textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #6a7fdb;
+  background-color: #383d3b;
+  color: #ffffff;
+  font-size: 1rem;
+  resize: vertical;
+}
+
+.settings-modal textarea::placeholder {
+  color: #6c757d;
 }
 
 .settings-modal .tooltip {
   position: relative;
   display: inline-block;
-  margin-left: 8px;
-  cursor: help;
-}
-
-.settings-modal input[type="range"] {
-  width: 80%;
-  max-width: 400px;
-  margin-bottom: 10px;
-}
-
-.settings-modal span {
-  font-size: 1.2rem;
-  font-weight: bold;
+  color: #6a7fdb;
 }
 
 .settings-modal .tooltip .tooltiptext {
-  font-size: 12px;
   visibility: hidden;
-  width: 200px;
-  background-color: #555;
-  color: #fff;
+  width: 250px;
+  background-color: #6a7fdb;
+  color: #ffffff;
   text-align: center;
   border-radius: 6px;
   padding: 5px;
   position: absolute;
   z-index: 1;
-  bottom: 125%;
-  left: 50%;
-  margin-left: -100px;
+  top: 50%;
+  right: 100%;
+  margin-right: 10px;
+  transform: translateY(-50%);
   opacity: 0;
   transition: opacity 0.3s;
 }
@@ -404,10 +450,10 @@ body {
 .settings-modal .tooltip .tooltiptext::after {
   content: "";
   position: absolute;
-  top: 100%;
-  left: 50%;
-  margin-left: -5px;
+  top: 50%;
+  left: 100%;
+  margin-top: -5px;
   border-width: 5px;
   border-style: solid;
-  border-color: #555 transparent transparent transparent;
+  border-color: transparent transparent transparent #6a7fdb;
 }

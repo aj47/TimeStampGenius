@@ -21,63 +21,67 @@ const Settings = () => {
   return (
     <div className="settings-modal">
       <h1>Settings</h1>
-      <div className="container">
-        <div className="setting-label">
-          <label htmlFor="chunkSize">Chunk Size:</label>
-          <div className="tooltip">
-            <FaQuestionCircle size={16} />
-            <span className="tooltiptext">
-              Determines how many words in each timestamp segment. 1000
-              words is usually about 7 minutes of time.
-            </span>
+      <div className="settings-container">
+        <div className="setting-item">
+          <div className="setting-label">
+            <label htmlFor="chunkSize">Chunk Size</label>
+            <div className="tooltip">
+              <FaQuestionCircle size={16} />
+              <span className="tooltiptext">
+                Determines how many words in each timestamp segment. 1000
+                words is usually about 7 minutes of time.
+              </span>
+            </div>
+          </div>
+          <div className="setting-control">
+            <input
+              type="range"
+              id="chunkSize"
+              min="300"
+              max="5000"
+              step="100"
+              value={chunkSize}
+              onChange={handleChunkSizeChange}
+            />
+            <span>{chunkSize} words</span>
           </div>
         </div>
-        <input
-          type="range"
-          id="chunkSize"
-          min="300"
-          max="5000"
-          step="100"
-          value={chunkSize}
-          onChange={handleChunkSizeChange}
-        />
-        <span>{chunkSize} words</span>
-      </div>
-      <div className="container">
-        <div className="setting-label">
-          <label htmlFor="systemPrompt">System Prompt:</label>
-          <div className="tooltip">
-            <FaQuestionCircle size={16} />
-            <span className="tooltiptext">
-              Custom instructions for the AI. Leave blank to use default.
-            </span>
+        <div className="setting-item">
+          <div className="setting-label">
+            <label htmlFor="systemPrompt">System Prompt</label>
+            <div className="tooltip">
+              <FaQuestionCircle size={16} />
+              <span className="tooltiptext">
+                Sets the system prompt for the LLM. Leave blank to use default.
+              </span>
+            </div>
           </div>
+          <textarea
+            id="systemPrompt"
+            value={systemPrompt}
+            onChange={handleSystemPromptChange}
+            placeholder="Enter custom system prompt here..."
+            rows="4"
+          />
         </div>
-        <textarea
-          id="systemPrompt"
-          value={systemPrompt}
-          onChange={handleSystemPromptChange}
-          placeholder="Enter custom system prompt here..."
-          rows="4"
-        />
-      </div>
-      <div className="container">
-        <div className="setting-label">
-          <label htmlFor="userPrompt">User Prompt:</label>
-          <div className="tooltip">
-            <FaQuestionCircle size={16} />
-            <span className="tooltiptext">
-              Custom user instructions for each chunk. Leave blank to use default.
-            </span>
+        <div className="setting-item">
+          <div className="setting-label">
+            <label htmlFor="userPrompt">User Prompt</label>
+            <div className="tooltip">
+              <FaQuestionCircle size={16} />
+              <span className="tooltiptext">
+                Custom user instructions prepended to each transcript chunk. Leave blank to use default.
+              </span>
+            </div>
           </div>
+          <textarea
+            id="userPrompt"
+            value={userPrompt}
+            onChange={handleUserPromptChange}
+            placeholder="Enter custom user prompt here..."
+            rows="4"
+          />
         </div>
-        <textarea
-          id="userPrompt"
-          value={userPrompt}
-          onChange={handleUserPromptChange}
-          placeholder="Enter custom user prompt here..."
-          rows="4"
-        />
       </div>
     </div>
   );
