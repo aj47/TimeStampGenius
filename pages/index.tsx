@@ -1,16 +1,18 @@
 import Dashboard from "@/components/Dashboard";
 import Head from "next/head";
 import Footer from "@/components/Footer";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useGlobalStore } from "../store/GlobalStore";
 
 export default function Home() {
-  const [userId, setUserId] = useState<String | null>("");
+  const { setFreeTrial } = useGlobalStore();
+
   useEffect(() => {
     const URLParams = new URLSearchParams(window.location.search);
     const user = URLParams.get("user");
-    console.log(user, "user");
-    if (user?.indexOf("@") === -1) setUserId(URLParams.get("user"));
-  }, []);
+    if (user?.indexOf("@") === -1) setFreeTrial(user);
+  }, [setFreeTrial]);
+
   return (
     <>
       <Head>

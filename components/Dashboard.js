@@ -6,7 +6,7 @@ import { useGlobalStore } from "../store/GlobalStore";
 
 const Dashboard = () => {
   const { data: session, status } = useSession();
-  const { credits, setCredits, chunkSize, systemPrompt, userPrompt } = useGlobalStore();
+  const { credits, setCredits, chunkSize, systemPrompt, userPrompt, freeTrial } = useGlobalStore();
   const [processingVideo, setProcessingVideo] = useState(false);
   const [resultingTimestamps, setResultingTimestamps] = useState([]);
   const [copySuccess, setCopySuccess] = useState(false);
@@ -22,20 +22,22 @@ const Dashboard = () => {
 
 
   useEffect(() => {
-    const textarea = textAreaRef.current;
-    const handleResize = () => {
-      if (!textarea) return
-      textarea.style.height = "auto";
-      textarea.style.height = `${textarea.scrollHeight}px`;
-      textarea.style.maxHeight = `${window.innerHeight * 0.5}px`;
-    };
+    if (typeof window !== 'undefined') {
+      const textarea = textAreaRef.current;
+      const handleResize = () => {
+        if (!textarea) return
+        textarea.style.height = "auto";
+        textarea.style.height = `${textarea.scrollHeight}px`;
+        textarea.style.maxHeight = `${window.innerHeight * 0.5}px`;
+      };
 
-    handleResize();
-    window.addEventListener("resize", handleResize);
+      handleResize();
+      window.addEventListener("resize", handleResize);
 
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
+      return () => {
+        window.removeEventListener("resize", handleResize);
+      };
+    }
   }, [resultingTimestamps]);
 
   const copyToClipboard = () => {
@@ -268,7 +270,7 @@ const generateTimestampCompletion = async (currentTextChunk) => {
 
   return (
     <div className="dashboard">
-      <NavBar freeTrial={freeTrial} />
+      <NavBar />
       <div className="hero-container">
         <h1 className="hero-title">
           YouTube <span className="highlight">Timestamp Generation</span> with

@@ -7,6 +7,7 @@ export const GlobalProvider = ({ children }) => {
   const [chunkSize, setChunkSize] = useState(1000);
   const [systemPrompt, setSystemPrompt] = useState("");
   const [userPrompt, setUserPrompt] = useState("");
+  const [freeTrial, setFreeTrial] = useState(null);
 
   return (
     <GlobalContext.Provider value={{
@@ -17,7 +18,9 @@ export const GlobalProvider = ({ children }) => {
       systemPrompt,
       setSystemPrompt,
       userPrompt,
-      setUserPrompt
+      setUserPrompt,
+      freeTrial,
+      setFreeTrial
     }}>
       {children}
     </GlobalContext.Provider>

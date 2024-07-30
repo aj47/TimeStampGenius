@@ -7,9 +7,9 @@ import Settings from "./Settings";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { useGlobalStore } from "../store/GlobalStore";
 
-const NavBar = ({ freeTrial }) => {
+const NavBar = () => {
   const { data: session, status } = useSession();
-  const { credits, setCredits, chunkSize, setChunkSize, systemPrompt, setSystemPrompt } = useGlobalStore();
+  const { credits, setCredits, chunkSize, setChunkSize, systemPrompt, setSystemPrompt, freeTrial } = useGlobalStore();
   const [buyCreditsModalOpen, setBuyCreditsModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
