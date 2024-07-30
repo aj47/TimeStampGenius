@@ -3,6 +3,7 @@ import { useSession, signIn } from "next-auth/react";
 import NavBar from "./NavBar";
 import YouTubeInput from "./YoutubeInput";
 import { useGlobalStore } from "../store/GlobalStore";
+import Modal from "./Modal";
 
 const Dashboard = () => {
   const { data: session, status } = useSession();
@@ -19,7 +20,7 @@ const Dashboard = () => {
     presence_penalty: 0,
   });
   const textAreaRef = useRef(null);
-
+  const [showInsufficientCreditsModal, setShowInsufficientCreditsModal] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -216,7 +217,6 @@ const generateTimestampCompletion = async (currentTextChunk) => {
           //Retry if stall
           processTranscript(transcriptionResult);
         } else if (completionResult.error) {
-          // setProcessingVideo(false);
           if (
             completionResult.errorType &&
             completionResult.errorType === "MaxIP"
@@ -227,10 +227,7 @@ const generateTimestampCompletion = async (currentTextChunk) => {
               `-- ${completionResult.error} --`,
             ]);
           } else {
-            setResultingTimestamps((resultingTimestamps) => [
-              ...resultingTimestamps,
-              "-- Insufficient credits to generate more timestamps --",
-            ]);
+            setShowInsufficientCreditsModal(true);
           }
           return;
         }
@@ -327,6 +324,26 @@ const generateTimestampCompletion = async (currentTextChunk) => {
           </>
         )}
       </>
+      <Modal
+        isOpen={showInsufficientCreditsModal}
+        onClose={() => setShowInsufficientCreditsModal(false)}
+      >
+        <h2>Insufficient Credits</h2>
+        <p>You don&apos;t have enough credits to generate more timestamps.</p>
+        {status === "authenticated" ? (
+          <>
+            <p>Purchase more credits to continue using the service.</p>
+            <button onClick={() => {/* Add your buy credits logic here */}}>
+              Buy Credits
+            </button>
+          </>
+        ) : (
+          <>
+            <p>Log in with Google to get free credits!</p>
+            <button onClick={() => signIn("google")}>Log in with Google</button>
+          </>
+        )}
+      </Modal>
     </div>
   );
 };

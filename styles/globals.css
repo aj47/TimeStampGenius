@@ -256,7 +256,7 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -264,58 +264,65 @@ body {
 }
 
 .modal-content {
-  background-color: #2e3338; /* Dark grey background */
-  color: #ffffff; /* White text for better contrast */
-  padding: 20px;
-  border-radius: 5px;
-  width: 90%; /* Responsive width */
-  max-width: 600px; /* Maximum width */
-  max-height: 90vh; /* Maximum height */
+  background-color: #2e3338;
+  color: #ffffff;
+  padding: 30px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
   overflow-y: auto;
   position: relative;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   display: flex;
   flex-direction: column;
+  gap: 20px;
 }
 
-.modal-content > div {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+.modal-content h2 {
+  color: #81d6e3;
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.modal-content p {
+  font-size: 1.1rem;
+  line-height: 1.5;
+  margin-bottom: 15px;
+}
+
+.modal-content button {
+  background-color: #6a7fdb;
+  color: #ffffff;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  margin: 10px 0;
+  transition: background-color 0.3s ease;
+}
+
+.modal-content button:hover {
+  background-color: #5a6fc6;
 }
 
 .modal-close {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 15px;
+  right: 15px;
   background: none;
   border: none;
-  color: #ffffff; /* White color for the close button */
+  color: #ffffff;
   font-size: 1.5rem;
   cursor: pointer;
   padding: 5px;
+  transition: color 0.3s ease;
 }
 
-/* Adjust styles for modal content */
-.modal-content h1 {
-  color: #ffffff;
-  margin-bottom: 20px;
-}
-
-.modal-content button {
-  background-color: #6a7fdb; /* Use your secondary color */
-  color: #ffffff;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1rem;
-  margin: 5px;
-}
-
-.modal-content button:hover {
-  background-color: #5a6fc6; /* Darker shade for hover effect */
+.modal-close:hover {
+  color: #fb6f93;
 }
 
 .buy-credit-modal {
