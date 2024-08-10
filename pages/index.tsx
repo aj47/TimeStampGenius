@@ -18,8 +18,8 @@ export default function Home() {
       <Head>
         <title>Timestamp Genius</title>
       </Head>
-      <Dashboard />
-      {/* <Footer /> */}
+      {/* <Dashboard /> */}
+      <Footer />
     </>
   );
 }
