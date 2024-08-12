@@ -1,5 +1,8 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-const { YoutubeTranscript } = require("youtube-transcript");
+require('dotenv').config();
+const { Configuration, OpenAIApi } = require("openai");
+const ytdl = require('ytdl-core');
+const { Readable } = require('stream');
 const { saveLog } = require("../../utils/helpers");
 
 const allowCors = (fn) => async (req, res) => {
@@ -23,12 +26,38 @@ const allowCors = (fn) => async (req, res) => {
 };
 
 async function handler(req, res) {
-  saveLog(JSON.stringify(req.body.id));
-  await YoutubeTranscript.fetchTranscript(req.body.id, { lang: "en" }).then(
-    (response) => {
-      res.status(200).json({ transcript: response });
+  const videoId = req.body.id;
+  saveLog(JSON.stringify(videoId));
+
+  try {
+    // 3. Download the YouTube video audio
+    const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
+    const audioStream = ytdl(videoUrl, { quality: 'lowestaudio' });
+
+    // 4. Convert the audio stream to a buffer
+    const chunks = [];
+    for await (const chunk of audioStream) {
+      chunks.push(chunk);
     }
-  );
+    const buffer = Buffer.concat(chunks);
+
+    // 5. Create a readable stream from the buffer
+    const readableStream = new Readable();
+    readableStream.push(buffer);
+    readableStream.push(null);
+
+    // 6. Transcribe the audio using Whisper
+    const transcription = await openai.createTranscription(
+      readableStream,
+      "whisper-1"
+    );
+
+    // 7. Send the transcription
+    res.status(200).json({ transcript: transcription.data.text });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'An error occurred during transcription' });
+  }
 }
 
 // module.exports = allowCors(handler)
