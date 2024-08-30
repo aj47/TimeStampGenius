@@ -1,0 +1,31 @@
+.inputMethodContainer {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.inputMethodButton {
+  padding: 10px 20px;
+  font-size: 1rem;
+  border: none;
+  background-color: #2e3338;
+  color: #ffffff;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  margin: 0 5px;
+}
+
+.inputMethodButton:hover {
+  background-color: #3a4046;
+}
+
+.inputMethodButton.active {
+  background-color: #6a7fdb;
+  color: #ffffff;
+}
+
+.inputContainer {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}

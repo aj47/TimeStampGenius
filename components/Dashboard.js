@@ -4,6 +4,8 @@ import NavBar from "./NavBar";
 import YouTubeInput from "./YoutubeInput";
 import { useGlobalStore } from "../store/GlobalStore";
 import Modal from "./Modal";
+import FileUpload from "./FileUpload"; // New component for file upload
+import styles from '../styles/Dashboard.module.css'; // Add this import
 
 const Dashboard = () => {
   const { data: session, status } = useSession();
@@ -12,7 +14,7 @@ const Dashboard = () => {
   const [resultingTimestamps, setResultingTimestamps] = useState([]);
   const [copySuccess, setCopySuccess] = useState(false);
   const [openAISettings, setOpenAISettings] = useState({
-    model: "gpt-3.5-turbo",
+    model: "gpt-4o-mini",
     temperature: 0.7,
     max_tokens: 100,
     top_p: 1,
@@ -21,6 +23,7 @@ const Dashboard = () => {
   });
   const textAreaRef = useRef(null);
   const [showInsufficientCreditsModal, setShowInsufficientCreditsModal] = useState(false);
+  const [inputMethod, setInputMethod] = useState("youtube"); // New state to track input method
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -183,12 +186,14 @@ const generateTimestampCompletion = async (currentTextChunk) => {
 
   const processTranscript = async (transcriptionResult) => {
     setResultingTimestamps(["00:00:00 - Intro"]);
-    // Loop through transcript
     let currentTextChunk = "";
     let chunkStartTime = 0;
-    let pendingTextChunk = ""; //This is used when we break context window on previous run
+    let pendingTextChunk = "";
+
     for (const currentLine of transcriptionResult.transcript) {
-      if (chunkStartTime === 0) chunkStartTime = currentLine.offset * 1000; //to get offset in seconds
+      if (chunkStartTime === 0) {
+        chunkStartTime = currentLine.timestamp[0] * 1000;
+      }
       if (pendingTextChunk.length > 0) {
         currentTextChunk = currentTextChunk + " " + pendingTextChunk;
         pendingTextChunk = "";
@@ -256,6 +261,7 @@ const generateTimestampCompletion = async (currentTextChunk) => {
         currentTextChunk = "";
       }
     }
+    setProcessingVideo(false);
   };
 
   const onSubmitVideoId = async (url) => {
@@ -263,6 +269,17 @@ const generateTimestampCompletion = async (currentTextChunk) => {
     const videoId = extractVideoId(url);
     const transcriptionResult = await getTranscription(videoId);
     await processTranscript(transcriptionResult);
+  };
+
+  // New function to handle JSON file upload
+  const handleFileUpload = async (jsonData) => {
+    setProcessingVideo(true);
+    if (jsonData.chunks) {
+      await processTranscript({ transcript: jsonData.chunks });
+    } else {
+      alert("Invalid JSON format. Please upload a file with a 'chunks' array.");
+      setProcessingVideo(false);
+    }
   };
 
   return (
@@ -290,7 +307,29 @@ const generateTimestampCompletion = async (currentTextChunk) => {
           Back
         </button>
       ) : (
-        <YouTubeInput onSubmit={onSubmitVideoId} />
+        <>
+          <div className={styles.inputMethodContainer}>
+            <button
+              className={`${styles.inputMethodButton} ${inputMethod === "youtube" ? styles.active : ""}`}
+              onClick={() => setInputMethod("youtube")}
+            >
+              YouTube URL
+            </button>
+            <button
+              className={`${styles.inputMethodButton} ${inputMethod === "json" ? styles.active : ""}`}
+              onClick={() => setInputMethod("json")}
+            >
+              Upload JSON
+            </button>
+          </div>
+          <div className={styles.inputContainer}>
+            {inputMethod === "youtube" ? (
+              <YouTubeInput onSubmit={onSubmitVideoId} />
+            ) : (
+              <FileUpload onUpload={handleFileUpload} />
+            )}
+          </div>
+        </>
       )}
       <>
         {resultingTimestamps.length === 0 && processingVideo && (
