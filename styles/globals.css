@@ -155,6 +155,10 @@ body {
     text-align: center;
     margin: none;
   }
+  .hero-container {
+    min-height: 250px;
+    padding: 1rem 0.5rem;
+  }
 }
 .screenshot1 {
   /* position: absolute; */
@@ -188,12 +192,13 @@ body {
 }
 
 .hero-container {
-  height: 210px;
+  min-height: 300px;
   line-height: 3.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100vw;
+  padding: 2rem 1rem;
 }
 
 .footer {

@@ -24,83 +24,15 @@ const extractVideoId = (url) => {
 };
 
 const main = async () => {
-  const videoId = extractVideoId(await getCurrentTab());
-  const transcriptionResult = await fetch(
-    "https://www.timestampgenius.com/api/getTranscription",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id: videoId,
-      }),
-    }
-  )
-    .then((res) => res.json())
-    .catch((e) => {
-      hasTranscript = false;
-    });
-  console.log(transcriptionResult, "transcriptionResult");
-  // Loop through transcript
-  let currentTextChunk = "";
-  let chunkSummaries = "";
-  let chunkStartTime = 0;
-  for (const currentLine of transcriptionResult.transcript) {
-    if (chunkStartTime === 0) chunkStartTime = currentLine.offset;
-    currentTextChunk = currentTextChunk + " " + currentLine.text;
-    // if the current text chunk exceeds 3500 words print the chunk and reset chunk to blank
-    if (currentTextChunk.split(" ").length > 500) {
-      let completionResult = null;
-      completionResult = await fetch(
-        "https://www.timestampgenius.com/api/generateFreeTimestampFromChrome",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            currentTextChunk,
-          }),
-        }
-      ).then((res) => res.json());
-      if (completionResult.error) {
-        // setProcessingVideo(false);
-        // setResultingTimestamps((resultingTimestamps) => [
-        //   ...resultingTimestamps,
-        //   "-- Insufficient credits to generate more timestamps --",
-        // ]);
-        console.log("error");
-        return;
-      }
-      // convert chunkStartTime from ms to hh:mm:ss string
-      const completionText = completionResult.completionText;
-      const timeStampString = new Date(chunkStartTime)
-        .toISOString()
-        .slice(11, 19);
-      chunkSummaries =
-        chunkSummaries + "\n " + timeStampString + " " + completionText;
-      const polishedTimeStamp = (
-        timeStampString +
-        " - " +
-        completionText
-      ).replace(/\n/g, " ");
-			console.log(polishedTimeStamp)
-      // setResultingTimestamps((resultingTimestamps) => [
-      //   ...resultingTimestamps,
-      //   polishedTimeStamp,
-      // ]);
-      document
-        .querySelector("#timestamp-textarea")
-        ?.scrollTo(
-          0,
-          document.querySelector("#timestamp-textarea")?.scrollHeight
-        );
-      // setCredits((oldCredits) => oldCredits - 1);
-      chunkStartTime = 0;
-      currentTextChunk = "";
-    }
-  }
+  // Chrome extension no longer supports anonymous usage
+  // Users must now sign in to use Timestamp Genius
+  console.log("Chrome extension is no longer supported. Please visit https://www.timestampgenius.com and sign in to use the service.");
+
+  // Display message to user
+  alert("Chrome extension is no longer supported. Please visit https://www.timestampgenius.com and sign in to use Timestamp Genius.");
+
+  // Redirect to the main website
+  window.open("https://www.timestampgenius.com", "_blank");
 };
 
 main();

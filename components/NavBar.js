@@ -9,7 +9,7 @@ import { useGlobalStore } from "../store/GlobalStore";
 
 const NavBar = () => {
   const { data: session, status } = useSession();
-  const { credits, setCredits, chunkSize, setChunkSize, systemPrompt, setSystemPrompt, freeTrial } = useGlobalStore();
+  const { credits, setCredits, chunkSize, setChunkSize, systemPrompt, setSystemPrompt } = useGlobalStore();
   const [buyCreditsModalOpen, setBuyCreditsModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
@@ -100,29 +100,12 @@ const NavBar = () => {
   };
 
   const updateCredits = async () => {
-    let response = null;
-    if (freeTrial) {
-      response = await fetch("/api/getFreeCredits", {
-        method: "POST",
-        body: JSON.stringify({
-          user: freeTrial,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((res) => res.json())
-        .catch((e) => {
-          document.location.href = "/";
-        });
-    } else {
-      response = await fetch("/api/getCredits", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }).then((res) => res.json());
-    }
+    const response = await fetch("/api/getCredits", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((res) => res.json());
     setCredits(response.credits);
   };
 

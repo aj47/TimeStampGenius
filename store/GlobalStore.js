@@ -4,10 +4,9 @@ const GlobalContext = createContext();
 
 export const GlobalProvider = ({ children }) => {
   const [credits, setCredits] = useState(0);
-  const [chunkSize, setChunkSize] = useState(1000);
+  const [chunkSize, setChunkSize] = useState(1500);
   const [systemPrompt, setSystemPrompt] = useState("");
   const [userPrompt, setUserPrompt] = useState("");
-  const [freeTrial, setFreeTrial] = useState(null);
 
   return (
     <GlobalContext.Provider value={{
@@ -18,9 +17,7 @@ export const GlobalProvider = ({ children }) => {
       systemPrompt,
       setSystemPrompt,
       userPrompt,
-      setUserPrompt,
-      freeTrial,
-      setFreeTrial
+      setUserPrompt
     }}>
       {children}
     </GlobalContext.Provider>

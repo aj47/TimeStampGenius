@@ -7,7 +7,7 @@ import Modal from "./Modal";
 
 const Dashboard = () => {
   const { data: session, status } = useSession();
-  const { credits, setCredits, chunkSize, systemPrompt, userPrompt, freeTrial } = useGlobalStore();
+  const { credits, setCredits, chunkSize, systemPrompt, userPrompt } = useGlobalStore();
   const [processingVideo, setProcessingVideo] = useState(false);
   const [resultingTimestamps, setResultingTimestamps] = useState([]);
   const [copySuccess, setCopySuccess] = useState(false);
@@ -69,12 +69,7 @@ const Dashboard = () => {
   };
 
 /**
- * Generates a timestamp completion for a given text chunk.
- *
- * This function makes a POST request to either the "/api/generateFreeTimestamp" endpoint
- * (if the user is on a free trial) or the "/api/generateTimestamp" endpoint (if the user is authenticated).
- * If the user is not authenticated, it makes a POST request to an external API.
- * The request body contains the current text chunk to be processed.
+ * Generates a timestamp completion for a given text chunk using OpenRouter with Gemini 2.5 Flash.
  *
  * @param {string} currentTextChunk The text chunk to be processed
  * @returns {object} The response from the API, or "error" if an error occurs
@@ -83,58 +78,33 @@ const generateTimestampCompletion = async (currentTextChunk) => {
   try {
     const requestBody = {
       currentTextChunk,
-      openAISettings,
+      systemPrompt,
+      userPrompt
     };
 
-    if (systemPrompt) {
-      requestBody.systemPrompt = systemPrompt;
+    const response = await fetch("/api/generateTimestampOpenRouter", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    });
+
+    if (!response.ok) {
+      console.error('API request failed:', response.status, response.statusText);
+      return "error";
     }
 
-    if (userPrompt) {
-      requestBody.userPrompt = userPrompt;
+    const result = await response.json();
+
+    if (result.error) {
+      console.error('API returned error:', result.error);
+      return "error";
     }
 
-    if (freeTrial) {
-      const response = await fetch("/api/generateFreeTimestamp", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          user: freeTrial,
-          ...requestBody,
-        }),
-      });
-      const result = await response.json();
-      return result;
-    } else {
-      if (status === "authenticated") {
-        const response = await fetch("/api/generateTimestamp", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(requestBody),
-        });
-        const result = await response.json();
-        return result;
-      } else {
-        const response = await fetch(
-          "https://m697d8eoq5.execute-api.us-east-1.amazonaws.com/dev/",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(requestBody),
-          }
-        );
-        const result = await response.json();
-        return result;
-      }
-    }
+    return result;
   } catch (e) {
-    console.log(e, "e");
+    console.error('Error in generateTimestampCompletion:', e);
     return "error";
   }
 };
@@ -265,6 +235,52 @@ const generateTimestampCompletion = async (currentTextChunk) => {
     await processTranscript(transcriptionResult);
   };
 
+  // Show login screen for unauthenticated users
+  if (status === "loading") {
+    return (
+      <div className="dashboard">
+        <NavBar />
+        <div className="hero-container">
+          <h1 className="hero-title">Loading...</h1>
+        </div>
+      </div>
+    );
+  }
+
+  if (status === "unauthenticated") {
+    return (
+      <div className="dashboard">
+        <NavBar />
+        <div className="hero-container">
+          <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <h1 className="hero-title">
+              YouTube <span className="highlight">Timestamp Generation</span> with AI!
+            </h1>
+            <div style={{ marginTop: '2rem' }}>
+              <h2>Sign in to get started</h2>
+              <p>You need to sign in with Google to use Timestamp Genius.</p>
+              <button
+                onClick={() => signIn("google")}
+                style={{
+                  padding: '12px 24px',
+                  fontSize: '16px',
+                  backgroundColor: '#4285f4',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  marginTop: '1rem'
+                }}
+              >
+                Sign in with Google
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="dashboard">
       <NavBar />
@@ -303,6 +319,7 @@ const generateTimestampCompletion = async (currentTextChunk) => {
                 ref={textAreaRef}
                 id="timestamp-textarea"
                 value={resultingTimestamps.join("\n")}
+                readOnly
               />
             </div>
             {copySuccess ? (
