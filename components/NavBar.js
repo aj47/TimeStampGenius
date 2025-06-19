@@ -209,7 +209,6 @@ const NavBar = () => {
               <button
                 className="primary"
                 onClick={() => {
-                  if (freeTrial) return;
                   setBuyCreditsModalOpen(true);
                 }}
               >
